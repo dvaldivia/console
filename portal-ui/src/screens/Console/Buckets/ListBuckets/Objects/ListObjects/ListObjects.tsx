@@ -17,7 +17,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
-import { withRouter } from "react-router-dom";
+import { useLocation, withRouter } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import get from "lodash/get";
 import TextField from "@material-ui/core/TextField";
@@ -78,6 +78,7 @@ import RewindEnable from "./RewindEnable";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteMultipleObjects from "./DeleteMultipleObjects";
+import history from "./../../../../../../history";
 
 const commonIcon = {
   backgroundRepeat: "no-repeat",
@@ -244,6 +245,12 @@ const ListObjects = ({
 
   const bucketName = match.params["bucket"];
 
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log("location change", location);
+  }, [location]);
+
   const updateMessage = () => {
     let timeDelta = Date.now() - loadingStartTime;
 
@@ -274,10 +281,13 @@ const ListObjects = ({
 
   useEffect(() => {
     if (loadingVersioning) {
+      console.log(bucketName);
       api
         .invoke("GET", `/api/v1/buckets/${bucketName}/versioning`)
         .then((res: BucketVersioning) => {
-          setIsVersioned(res.is_versioned);
+          if (res !== null) {
+            setIsVersioned(res.is_versioned);
+          }
           setLoadingVersioning(false);
         })
         .catch((err: any) => {
@@ -342,7 +352,7 @@ const ListObjects = ({
           .invoke(
             "GET",
             `/api/v1/buckets/${bucketName}/rewind/${rewindParsed}?prefix=${
-              internalPaths ? `${internalPaths}/` : ""
+              internalPaths ? `${encodeURIComponent(internalPaths)}/` : ""
             }`
           )
           .then((res: RewindObjectList) => {
@@ -364,7 +374,9 @@ const ListObjects = ({
         api
           .invoke(
             "GET",
-            `/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}`
+            `/api/v1/buckets/${bucketName}/objects?prefix=${encodeURIComponent(
+              internalPaths
+            )}`
           )
           .then((res: BucketObjectsList) => {
             //It is a file since it has elements in the object, setting file flag and waiting for component mount
@@ -385,7 +397,7 @@ const ListObjects = ({
     if (loading) {
       let extraPath = "";
       if (internalPaths) {
-        extraPath = `?prefix=${internalPaths}/`;
+        extraPath = `?prefix=${encodeURIComponent(internalPaths)}/`;
       }
 
       let currentTimestamp = Date.now() + 0;
@@ -435,13 +447,6 @@ const ListObjects = ({
     rewindEnabled,
     rewindDate,
   ]);
-
-  useEffect(() => {
-    const url = get(match, "url", "/object-browser");
-    if (url !== routesList[routesList.length - 1].route) {
-      setAllRoutes(url);
-    }
-  }, [match, routesList, setAllRoutes]);
 
   useEffect(() => {
     setLoading(true);
@@ -600,9 +605,15 @@ const ListObjects = ({
     // Element is a file. we open details here
     const pathInArray = idElement.split("/");
     const fileName = pathInArray[pathInArray.length - 1];
-    const newPath = `${currentPath}/${fileName}`;
+    // const newPath = `${currentPath}/${fileName}`;
+    const newPath = `${currentPath}/${encodeURIComponent(fileName)}`;
 
-    addRoute(newPath, fileName, "file");
+    console.log(`newPath ${newPath}`);
+
+    history.push(newPath);
+
+    // addRoute(newPath, fileName, "file");
+    // addRoute(newPath, encodeURIComponent(fileName), "file");
     return;
   };
 

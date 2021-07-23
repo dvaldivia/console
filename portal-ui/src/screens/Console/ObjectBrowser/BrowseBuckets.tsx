@@ -190,6 +190,9 @@ const BrowseBuckets = ({
 
   const handleViewChange = (idElement: string) => {
     const currentPath = get(match, "url", "/object-browser");
+    console.log(idElement);
+    console.log(idElement);
+    console.log(idElement);
     const newPath = `${currentPath}/${idElement}`;
 
     addRoute(newPath, idElement, "path");

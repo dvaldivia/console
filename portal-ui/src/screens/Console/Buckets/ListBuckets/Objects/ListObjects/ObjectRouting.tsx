@@ -42,8 +42,17 @@ const ObjectRouting = ({
 
   useEffect(() => {
     const url = get(match, "url", "/object-browser");
+    const decodedUrl = `${url}`
+      .split("/")
+      .map((x) => {
+        return decodeURIComponent(x);
+      })
+      .join("/");
 
+    console.log("match", match);
+    console.log("decodedUrl", decodedUrl);
     if (url !== routesList[routesList.length - 1].route) {
+      console.log("SUEs2", url, routesList);
       setAllRoutes(url);
     }
   }, [match, routesList, setAllRoutes]);

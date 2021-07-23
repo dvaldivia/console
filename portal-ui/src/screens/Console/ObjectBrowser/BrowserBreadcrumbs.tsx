@@ -50,6 +50,8 @@ const BrowserBreadcrumbs = ({
   rewindDate,
   removeRouteLevel,
 }: IObjectBrowser) => {
+  console.log("objectsList", objectsList);
+
   const listBreadcrumbs = objectsList.map((objectItem, index) => {
     return (
       <React.Fragment key={`breadcrumbs-${index.toString()}`}>

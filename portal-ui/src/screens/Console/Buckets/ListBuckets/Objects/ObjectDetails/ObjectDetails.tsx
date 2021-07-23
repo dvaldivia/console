@@ -220,6 +220,8 @@ const ObjectDetails = ({
   useEffect(() => {
     if (loadObjectData) {
       const encodedPath = encodeURIComponent(pathInBucket);
+      // const encodedPath = pathInBucket;
+      console.log(`encodedPath ${encodedPath}`);
       api
         .invoke(
           "GET",

@@ -79,7 +79,15 @@ export function objectBrowserReducer(
         ...state.routesList,
         { route: action.route, label: action.label, type: action.routeType },
       ];
-      history.push(action.route);
+      console.log(`history.push: ${action.route}`);
+      const witnessMe = action.route
+        .split("/")
+        .map((x) => {
+          return encodeURIComponent(encodeURIComponent(x));
+        })
+        .join("/");
+      console.log(`witnessMe: ${witnessMe}`);
+      history.push(witnessMe);
 
       return { ...state, routesList: newRouteList };
     case OBJECT_BROWSER_RESET_ROUTES_LIST:
@@ -99,6 +107,8 @@ export function objectBrowserReducer(
         routesList: newRouteLevels,
       };
     case OBJECT_BROWSER_SET_ALL_ROUTES:
+      console.log(`action.currentRoute : ${action.currentRoute}`);
+      // debugger;
       const splitRoutes = action.currentRoute.split("/");
       const routesArray: Route[] = [];
       let initRoute = initialRoute[0].route;
@@ -116,6 +126,8 @@ export function objectBrowserReducer(
       });
 
       const newSetOfRoutes = [...initialRoute, ...routesArray];
+
+      console.log(`newSetOfRoutes `, newSetOfRoutes);
 
       return {
         ...state,
