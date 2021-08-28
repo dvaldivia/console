@@ -42,7 +42,7 @@ import { niceBytes } from "../../../common/utils";
 import { selectDrive } from "./actions";
 import { ErrorResponseHandler } from "../../../common/types";
 import api from "../../../common/api";
-import TableWrapper from "../Common/TableWrapper/TableWrapper";
+import TableWrapper, { ItemActions } from "../Common/TableWrapper/TableWrapper";
 import FormatDrives from "./FormatDrives";
 import FormatErrorsResult from "./FormatErrorsResult";
 import RefreshIcon from "../../../icons/RefreshIcon";
@@ -217,9 +217,9 @@ const DirectCSIMain = ({
     }
   };
 
-  const tableActions = [
+  const tableActions: ItemActions[] = [
     {
-      fotype: "format",
+      type: "format",
       onClick: formatSingleUnit,
       sendOnlyId: true,
     },

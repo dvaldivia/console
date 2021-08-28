@@ -42,7 +42,6 @@ import {
   fileDownloadStarted,
   fileIsBeingPrepared,
   resetRewind,
-  setAllRoutes,
   setLastAsFile,
 } from "../../../../ObjectBrowser/actions";
 import {
@@ -164,28 +163,31 @@ const styles = (theme: Theme) =>
 interface IListObjectsProps {
   classes: any;
   match: any;
+
+  records: BucketObject[];
+  rewind: RewindObject[];
+  internalPaths: string;
+  bucketName: string;
+  isVersioned: boolean;
   loading: boolean;
   loadingRewind: boolean;
   setLoading: any;
-  records: BucketObject[];
-  rewind: BucketObject[];
+
+  // mapped
   addRoute: (param1: string, param2: string, param3: string) => any;
-  setAllRoutes: (path: string) => any;
-  routesList: Route[];
-  downloadingFiles: string[];
   setLastAsFile: () => any;
-  rewindEnabled: boolean;
-  rewindDate: any;
-  bucketToRewind: string;
   setLoadingProgress: typeof setLoadingProgress;
   setSnackBarMessage: typeof setSnackBarMessage;
   setErrorSnackMessage: typeof setErrorSnackMessage;
   fileIsBeingPrepared: typeof fileIsBeingPrepared;
   fileDownloadStarted: typeof fileDownloadStarted;
   resetRewind: typeof resetRewind;
-  internalPaths: string;
-  bucketName: string;
-  isVersioned: boolean;
+  // map state
+  routesList: Route[];
+  downloadingFiles: string[];
+  rewindEnabled: boolean;
+  rewindDate: any;
+  bucketToRewind: string;
 }
 
 const ListObjects = ({
@@ -197,7 +199,6 @@ const ListObjects = ({
   records,
   rewind,
   addRoute,
-  setAllRoutes,
   routesList,
   downloadingFiles,
   rewindEnabled,
@@ -418,7 +419,9 @@ const ListObjects = ({
         downloadingFiles.includes(`${match.params["bucket"]}/${item}`),
       disableButtonFunction: (item: string) => {
         if (rewindEnabled) {
-          const element = rewind.find((elm) => elm.name === item);
+          const element: RewindObject | undefined = rewind.find(
+            (elm) => elm.name === item
+          );
 
           if (element && element.delete_flag) {
             return true;
@@ -548,7 +551,7 @@ const ListObjects = ({
     },
   ];
 
-  let pageTitle = "Folder";
+  let pageTitle = "/";
 
   if (match) {
     if ("bucket" in match.params) {
@@ -750,7 +753,6 @@ const mapStateToProps = ({ objectBrowser }: ObjectBrowserReducer) => ({
 
 const mapDispatchToProps = {
   addRoute,
-  setAllRoutes,
   setLastAsFile,
   setLoadingProgress,
   setSnackBarMessage,
@@ -762,4 +764,4 @@ const mapDispatchToProps = {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-export default withRouter(connector(withStyles(styles)(ListObjects)));
+export default connector(withStyles(styles)(ListObjects));

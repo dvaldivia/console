@@ -250,7 +250,7 @@ const BucketDetails = ({
   }, [loadingSize, setErrorSnackMessage, bucketName]);
 
   useEffect(() => {
-    let matchURL = match.params ? match.params["0"] : "summary";
+    let matchURL = match.params ? match.params["0"] : "browse";
 
     if (!matchURL) {
       matchURL = "";
@@ -308,6 +308,9 @@ const BucketDetails = ({
     switch (newTab) {
       case "browse":
         mainRoute += "/browse";
+        break;
+      case "summary":
+        mainRoute += "/summary";
         break;
       case "events":
         mainRoute += "/events";

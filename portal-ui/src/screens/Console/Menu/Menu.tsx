@@ -201,23 +201,7 @@ const Menu = ({
       icon: <DashboardIcon />,
     },
     {
-      group: "User",
-      type: "item",
-      component: NavLink,
-      to: "/object-browser",
-      name: "Object Browser",
-      icon: <ObjectBrowserIcon />,
-    },
-    {
-      group: "User",
-      type: "item",
-      component: NavLink,
-      to: "/account",
-      name: "Service Accounts",
-      icon: <AccountIcon />,
-    },
-    {
-      group: "Admin",
+      group: "common",
       type: "item",
       component: NavLink,
       to: "/buckets",
@@ -225,7 +209,7 @@ const Menu = ({
       icon: <BucketsIcon />,
     },
     {
-      group: "Admin",
+      group: "common",
       type: "item",
       component: NavLink,
       to: "/users",
@@ -233,7 +217,7 @@ const Menu = ({
       icon: <UsersIcon />,
     },
     {
-      group: "Admin",
+      group: "common",
       type: "item",
       component: NavLink,
       to: "/groups",
@@ -241,7 +225,15 @@ const Menu = ({
       icon: <GroupsIcon />,
     },
     {
-      group: "Admin",
+      group: "common",
+      type: "item",
+      component: NavLink,
+      to: "/account",
+      name: "Service Accounts",
+      icon: <AccountIcon />,
+    },
+    {
+      group: "common",
       type: "item",
       component: NavLink,
       to: "/policies",
@@ -290,7 +282,7 @@ const Menu = ({
       icon: <DiagnosticsIcon />,
     },
     {
-      group: "Admin",
+      group: "common",
       type: "item",
       component: NavLink,
       to: "/settings",

@@ -50,9 +50,8 @@ var (
 	storageDrives         = "/storage/drives"
 	remoteBuckets         = "/remote-buckets"
 	replication           = "/replication"
-	objectBrowser         = "/object-browser/:bucket/*"
-	objectBrowserBucket   = "/object-browser/:bucket"
-	mainObjectBrowser     = "/object-browser"
+	objectBrowser         = "/buckets"
+	objectBrowserBucket   = "/buckets/*"
 	license               = "/license"
 	watch                 = "/watch"
 	heal                  = "/heal"
@@ -297,7 +296,6 @@ var endpointRules = map[string]ConfigurationActionSet{
 	remoteBuckets:       remoteBucketsActionSet,
 	replication:         replicationActionSet,
 	objectBrowser:       objectBrowserActionSet,
-	mainObjectBrowser:   objectBrowserActionSet,
 	objectBrowserBucket: objectBrowserActionSet,
 	license:             licenseActionSet,
 	watch:               watchActionSet,

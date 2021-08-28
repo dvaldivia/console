@@ -265,11 +265,10 @@ const ObjectDetails = ({
 
   const allPathData = internalPaths.split("/");
   const objectName = allPathData[allPathData.length - 1];
-  const pathInBucket = allPathData.slice(3).join("/");
 
   useEffect(() => {
     if (loadObjectData) {
-      const encodedPath = encodeURIComponent(pathInBucket);
+      const encodedPath = encodeURIComponent(internalPaths);
       api
         .invoke(
           "GET",
@@ -300,14 +299,14 @@ const ObjectDetails = ({
   }, [
     loadObjectData,
     bucketName,
-    pathInBucket,
+    internalPaths,
     setErrorSnackMessage,
     distributedSetup,
   ]);
 
   useEffect(() => {
     if (metadataLoad) {
-      const encodedPath = encodeURIComponent(pathInBucket);
+      const encodedPath = encodeURIComponent(internalPaths);
       api
         .invoke(
           "GET",
@@ -324,7 +323,7 @@ const ObjectDetails = ({
           setMetadataLoad(false);
         });
     }
-  }, [bucketName, metadataLoad, pathInBucket]);
+  }, [bucketName, metadataLoad, internalPaths]);
 
   let tagKeys: string[] = [];
 
@@ -369,7 +368,7 @@ const ObjectDetails = ({
     }
     download(
       bucketName,
-      pathInBucket,
+      internalPaths,
       object.version_id,
       removeDownloadAnimation,
       includeVersion
@@ -473,7 +472,7 @@ const ObjectDetails = ({
         <DeleteObject
           deleteOpen={deleteOpen}
           selectedBucket={bucketName}
-          selectedObject={pathInBucket}
+          selectedObject={internalPaths}
           closeDeleteModalAndRefresh={closeDeleteModal}
         />
       )}
@@ -481,7 +480,7 @@ const ObjectDetails = ({
         <AddTagModal
           modalOpen={tagModalOpen}
           currentTags={actualInfo.tags}
-          selectedObject={pathInBucket}
+          selectedObject={internalPaths}
           versionId={actualInfo.version_id}
           bucketName={bucketName}
           onCloseAndUpdate={closeAddTagModal}
@@ -491,7 +490,7 @@ const ObjectDetails = ({
         <DeleteTagModal
           deleteOpen={deleteTagModalOpen}
           currentTags={actualInfo.tags}
-          selectedObject={pathInBucket}
+          selectedObject={internalPaths}
           versionId={actualInfo.version_id}
           bucketName={bucketName}
           onCloseAndUpdate={closeDeleteTagModal}
@@ -502,7 +501,7 @@ const ObjectDetails = ({
         <SetLegalHoldModal
           open={legalholdOpen}
           closeModalAndRefresh={closeLegalholdModal}
-          objectName={pathInBucket}
+          objectName={internalPaths}
           bucketName={bucketName}
           actualInfo={actualInfo}
         />

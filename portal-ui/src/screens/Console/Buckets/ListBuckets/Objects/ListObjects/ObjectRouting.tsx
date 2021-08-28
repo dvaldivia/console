@@ -18,11 +18,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ListObjects from "./ListObjects";
 import ObjectDetails from "../ObjectDetails/ObjectDetails";
 import get from "lodash/get";
-import {
-  resetRewind,
-  setAllRoutes,
-  setRewindEnable,
-} from "../../../../ObjectBrowser/actions";
+import { resetRewind, setAllRoutes } from "../../../../ObjectBrowser/actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { ObjectBrowserState, Route } from "../../../../ObjectBrowser/reducers";
@@ -49,7 +45,6 @@ interface ObjectRoutingProps {
   rewindEnabled: boolean;
   rewindDate: any;
   resetRewind: typeof resetRewind;
-  setRewindEnable: typeof setRewindEnable;
 }
 
 function useInterval(callback: any, delay: number) {
@@ -84,21 +79,18 @@ const ObjectRouting = ({
   rewindEnabled,
   rewindDate,
   resetRewind,
-  setRewindEnable,
 }: ObjectRoutingProps) => {
   // const currentItem = routesList[routesList.length - 1];
   const [records, setRecords] = useState<BucketObject[]>([]);
   const [rewind, setRewind] = useState<RewindObject[]>([]);
   const [currentItem, setCurrentItem] = useState<string>("path");
-  const [internalPaths, setInternalPaths] = useState<string>("");
-  const [internalPathsLoaded, setInternalPathsLoaded] =
-    useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [currentUrl, setCurrentUrl] = useState<string>("path");
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [loadingRewind, setLoadingRewind] = useState<boolean>(true);
   const [loadingStartTime, setLoadingStartTime] = useState<number>(0);
   const [loadingMessage, setLoadingMessage] =
     useState<React.ReactNode>(defLoading);
-  const [selectedBucket, setSelectedBucket] = useState<string>("");
   const [isVersioned, setIsVersioned] = useState<boolean>(false);
 
   const [loadingVersioning, setLoadingVersioning] = useState<boolean>(true);
@@ -132,32 +124,35 @@ const ObjectRouting = ({
     }
   }, 1000);
 
+  // only load stuff on match change
   useEffect(() => {
+    setCurrentItem("path");
+    const url = get(match, "url", `/buckets/${bucketName}/browse`);
+    console.log(`${url}`, "vs", currentUrl);
+    if (`${url}` !== currentUrl) {
+      console.log("processing", url);
+      setCurrentUrl(url);
+      setLoading(true);
+    }
+  }, [match, setLoading]);
+
+  const getInternalPaths = (): string => {
     //we will ignore anything after the first 3 elements of the routing URL
     const url = get(match, "url", `/buckets/${bucketName}/browse`);
-
-    console.log("tmatch changed!", match);
-    console.log("tbucketName", match.params["bucketName"]);
-    console.log("routing url", url);
     let urlParts = url.split("/");
     const intenrla = urlParts
       .filter((x: string, i: number) => {
         return i > 3 && x.trim() !== "";
       })
       .join("/");
-    console.log("intenrla url", intenrla);
-    setInternalPaths(intenrla);
-    setInternalPathsLoaded(true);
-    setLoading(true);
+    return intenrla;
+  };
 
-    // if (url !== routesList[routesList.length - 1].route) {
-    //   setAllRoutes(url);
-    // }
-  }, [match]);
+  const internalPaths = getInternalPaths();
 
   useEffect(() => {
-    console.log("match3 loading", loading, internalPaths);
-    if (loading && internalPathsLoaded) {
+    if (loading) {
+      console.log("match3 loading", loading, internalPaths, match);
       const verifyIfIsFile = (intPaths: string) => {
         console.log("verify", intPaths);
         if (rewindEnabled) {
@@ -228,8 +223,6 @@ const ObjectRouting = ({
       api
         .invoke("GET", `/api/v1/buckets/${bucketName}/objects${extraPath}`)
         .then((res: BucketObjectsList) => {
-          setSelectedBucket(bucketName);
-
           const records: BucketObject[] = res.objects || [];
           const folders: BucketObject[] = [];
           const files: BucketObject[] = [];
@@ -261,14 +254,12 @@ const ObjectRouting = ({
         });
     }
   }, [
-    loading,
     match,
+    loading,
     setErrorSnackMessage,
     bucketName,
     rewindEnabled,
     rewindDate,
-    internalPaths,
-    internalPathsLoaded,
   ]);
 
   useEffect(() => {
@@ -330,6 +321,7 @@ const ObjectRouting = ({
 
   return currentItem === "path" ? (
     <ListObjects
+      match={match}
       records={records}
       rewind={rewind}
       loading={loading}
@@ -353,7 +345,6 @@ const mapStateToProps = ({ objectBrowser }: ObjectBrowserReducer) => ({
 const mapDispatchToProps = {
   setAllRoutes,
   resetRewind,
-  setRewindEnable,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
