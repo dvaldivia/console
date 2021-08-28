@@ -51,6 +51,10 @@ import { BucketsIcon, DeleteIcon } from "../../../../icons";
 import DeleteBucket from "../ListBuckets/DeleteBucket";
 import AccessRulePanel from "./AccessRulePanel";
 import RefreshIcon from "../../../../icons/RefreshIcon";
+import { niceBytes } from "../../../../common/utils";
+import { BucketList } from "../../Watch/types";
+import get from "lodash/get";
+import ObjectRouting from "../ListBuckets/Objects/ListObjects/ObjectRouting";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -191,6 +195,8 @@ const BucketDetails = ({
   const [loadingPerms, setLoadingPerms] = useState<boolean>(true);
   const [canGetReplication, setCanGetReplication] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [bucketSize, setBucketSize] = useState<string>("0");
+  const [loadingSize, setLoadingSize] = useState<boolean>(true);
   const bucketName = match.params["bucketName"];
 
   useEffect(() => {
@@ -220,6 +226,28 @@ const BucketDetails = ({
     setBucketInfo,
     setErrorSnackMessage,
   ]);
+
+  useEffect(() => {
+    if (loadingSize) {
+      api
+        .invoke("GET", `/api/v1/buckets`)
+        .then((res: BucketList) => {
+          const resBuckets = get(res, "buckets", []);
+
+          const bucketInfo = resBuckets.find(
+            (bucket) => bucket.name === bucketName
+          );
+          const size = get(bucketInfo, "size", "0");
+
+          setLoadingSize(false);
+          setBucketSize(size);
+        })
+        .catch((err: ErrorResponseHandler) => {
+          setLoadingSize(false);
+          setErrorSnackMessage(err);
+        });
+    }
+  }, [loadingSize, setErrorSnackMessage, bucketName]);
 
   useEffect(() => {
     let matchURL = match.params ? match.params["0"] : "summary";
@@ -278,6 +306,9 @@ const BucketDetails = ({
     let mainRoute = `/buckets/${bucketName}`;
 
     switch (newTab) {
+      case "browse":
+        mainRoute += "/browse";
+        break;
       case "events":
         mainRoute += "/events";
         break;
@@ -294,7 +325,7 @@ const BucketDetails = ({
         mainRoute += "/prefix";
         break;
       default:
-        mainRoute += "/summary";
+        mainRoute += "/browse";
     }
 
     setBucketDetailsTab(newTab);
@@ -342,7 +373,8 @@ const BucketDetails = ({
                 Access:{" "}
                 {bucketInfo &&
                   bucketInfo?.access[0].toUpperCase() +
-                    bucketInfo?.access.substr(1).toLowerCase()}
+                    bucketInfo?.access.substr(1).toLowerCase()}{" "}
+                <b>/</b> Reported Usage: {niceBytes(bucketSize)}
               </Fragment>
             }
             actions={
@@ -377,6 +409,15 @@ const BucketDetails = ({
         </Grid>
         <Grid item xs={2}>
           <List component="nav" dense={true}>
+            <ListItem
+              button
+              selected={selectedTab === "browse"}
+              onClick={() => {
+                changeRoute("browse");
+              }}
+            >
+              <ListItemText primary="Browse" />
+            </ListItem>
             <ListItem
               button
               selected={selectedTab === "summary"}
@@ -468,9 +509,17 @@ const BucketDetails = ({
                 component={AccessRulePanel}
               />
               <Route
+                path="/buckets/:bucketName/browse/*"
+                component={ObjectRouting}
+              />
+              <Route
+                path="/buckets/:bucketName/browse"
+                component={ObjectRouting}
+              />
+              <Route
                 path="/buckets/:bucketName"
                 component={() => (
-                  <Redirect to={`/buckets/${bucketName}/summary`} />
+                  <Redirect to={`/buckets/${bucketName}/browse`} />
                 )}
               />
             </Switch>

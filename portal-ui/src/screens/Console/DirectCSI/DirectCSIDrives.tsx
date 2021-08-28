@@ -219,7 +219,7 @@ const DirectCSIMain = ({
 
   const tableActions = [
     {
-      type: "format",
+      fotype: "format",
       onClick: formatSingleUnit,
       sendOnlyId: true,
     },

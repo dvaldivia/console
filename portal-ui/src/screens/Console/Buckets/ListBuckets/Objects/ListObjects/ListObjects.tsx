@@ -22,12 +22,7 @@ import Grid from "@material-ui/core/Grid";
 import get from "lodash/get";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {
-  BucketObject,
-  BucketObjectsList,
-  RewindObject,
-  RewindObjectList,
-} from "./types";
+import { BucketObject, RewindObject, RewindObjectList } from "./types";
 import api from "../../../../../../common/api";
 import TableWrapper from "../../../../Common/TableWrapper/TableWrapper";
 import { niceBytes } from "../../../../../../common/utils";
@@ -39,14 +34,7 @@ import {
   objectBrowserCommon,
   searchField,
 } from "../../../../Common/FormComponents/common/styleLibrary";
-import PageHeader from "../../../../Common/PageHeader/PageHeader";
-import {
-  Badge,
-  Button,
-  IconButton,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
+import { Badge, Button, IconButton, Tooltip } from "@material-ui/core";
 import * as reactMoment from "react-moment";
 import BrowserBreadcrumbs from "../../../../ObjectBrowser/BrowserBreadcrumbs";
 import {
@@ -176,6 +164,11 @@ const styles = (theme: Theme) =>
 interface IListObjectsProps {
   classes: any;
   match: any;
+  loading: boolean;
+  loadingRewind: boolean;
+  setLoading: any;
+  records: BucketObject[];
+  rewind: BucketObject[];
   addRoute: (param1: string, param2: string, param3: string) => any;
   setAllRoutes: (path: string) => any;
   routesList: Route[];
@@ -190,36 +183,19 @@ interface IListObjectsProps {
   fileIsBeingPrepared: typeof fileIsBeingPrepared;
   fileDownloadStarted: typeof fileDownloadStarted;
   resetRewind: typeof resetRewind;
+  internalPaths: string;
+  bucketName: string;
+  isVersioned: boolean;
 }
-
-function useInterval(callback: any, delay: number) {
-  const savedCallback = useRef<Function | null>(null);
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      if (savedCallback !== undefined && savedCallback.current) {
-        savedCallback.current();
-      }
-    }
-
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
-const defLoading = <Typography component="h3">Loading...</Typography>;
 
 const ListObjects = ({
   classes,
   match,
+  loading,
+  loadingRewind,
+  setLoading,
+  records,
+  rewind,
   addRoute,
   setAllRoutes,
   routesList,
@@ -234,11 +210,10 @@ const ListObjects = ({
   fileIsBeingPrepared,
   fileDownloadStarted,
   resetRewind,
+  internalPaths,
+  bucketName,
+  isVersioned,
 }: IListObjectsProps) => {
-  const [records, setRecords] = useState<BucketObject[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [rewind, setRewind] = useState<RewindObject[]>([]);
-  const [loadingRewind, setLoadingRewind] = useState<boolean>(true);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteMultipleOpen, setDeleteMultipleOpen] = useState<boolean>(false);
   const [createFolderOpen, setCreateFolderOpen] = useState<boolean>(false);
@@ -246,219 +221,18 @@ const ListObjects = ({
   const [selectedBucket, setSelectedBucket] = useState<string>("");
   const [filterObjects, setFilterObjects] = useState<string>("");
   const [loadingStartTime, setLoadingStartTime] = useState<number>(0);
-  const [loadingMessage, setLoadingMessage] =
-    useState<React.ReactNode>(defLoading);
-  const [loadingVersioning, setLoadingVersioning] = useState<boolean>(true);
-  const [isVersioned, setIsVersioned] = useState<boolean>(false);
+
   const [rewindSelect, setRewindSelect] = useState<boolean>(false);
   const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
 
-  const bucketName = match.params["bucket"];
-
   const fileUpload = useRef<HTMLInputElement>(null);
 
-  const updateMessage = () => {
-    let timeDelta = Date.now() - loadingStartTime;
-
-    if (timeDelta / 1000 >= 6) {
-      setLoadingMessage(
-        <React.Fragment>
-          <Typography component="h3">
-            This operation is taking longer than expected... (
-            {Math.ceil(timeDelta / 1000)}s)
-          </Typography>
-        </React.Fragment>
-      );
-    } else if (timeDelta / 1000 >= 3) {
-      setLoadingMessage(
-        <Typography component="h3">
-          This operation is taking longer than expected...
-        </Typography>
-      );
-    }
-  };
-
-  useInterval(() => {
-    // Your custom logic here
-    if (loading) {
-      updateMessage();
-    }
-  }, 1000);
-
-  useEffect(() => {
-    if (loadingVersioning) {
-      api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/versioning`)
-        .then((res: BucketVersioning) => {
-          setIsVersioned(res.is_versioned);
-          setLoadingVersioning(false);
-        })
-        .catch((err: ErrorResponseHandler) => {
-          setErrorSnackMessage(err);
-          setLoadingVersioning(false);
-        });
-    }
-  }, [bucketName, loadingVersioning, setErrorSnackMessage]);
-
-  // Rewind
-  useEffect(() => {
-    const internalPaths = match.params[0];
-
-    if (rewindEnabled) {
-      if (bucketToRewind !== bucketName) {
-        resetRewind();
-        return;
-      }
-
-      if (rewindDate) {
-        setLoadingRewind(true);
-        const rewindParsed = rewindDate.toISOString();
-
-        api
-          .invoke(
-            "GET",
-            `/api/v1/buckets/${bucketName}/rewind/${rewindParsed}?prefix=${
-              internalPaths ? `${internalPaths}/` : ""
-            }`
-          )
-          .then((res: RewindObjectList) => {
-            setLoadingRewind(false);
-            if (res.objects) {
-              setRewind(res.objects);
-            } else {
-              setRewind([]);
-            }
-          })
-          .catch((err: ErrorResponseHandler) => {
-            setLoadingRewind(false);
-            setErrorSnackMessage(err);
-          });
-      }
-    }
-  }, [
-    rewindEnabled,
-    rewindDate,
-    bucketToRewind,
-    bucketName,
-    match,
-    setErrorSnackMessage,
-    resetRewind,
-  ]);
-
-  useEffect(() => {
-    const internalPaths = match.params[0];
-
-    const verifyIfIsFile = () => {
-      if (rewindEnabled) {
-        const rewindParsed = rewindDate.toISOString();
-        api
-          .invoke(
-            "GET",
-            `/api/v1/buckets/${bucketName}/rewind/${rewindParsed}?prefix=${
-              internalPaths ? `${internalPaths}/` : ""
-            }`
-          )
-          .then((res: RewindObjectList) => {
-            //It is a file since it has elements in the object, setting file flag and waiting for component mount
-            if (res.objects === null) {
-              setLastAsFile();
-            } else {
-              // It is a folder, we remove loader
-              setLoadingRewind(false);
-              setLoading(false);
-            }
-          })
-          .catch((err: ErrorResponseHandler) => {
-            setLoadingRewind(false);
-            setLoading(false);
-            setErrorSnackMessage(err);
-          });
-      } else {
-        api
-          .invoke(
-            "GET",
-            `/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}`
-          )
-          .then((res: BucketObjectsList) => {
-            //It is a file since it has elements in the object, setting file flag and waiting for component mount
-            if (res.objects !== null) {
-              setLastAsFile();
-            } else {
-              // It is a folder, we remove loader
-              setLoading(false);
-            }
-          })
-          .catch((err: ErrorResponseHandler) => {
-            setLoading(false);
-            setErrorSnackMessage(err);
-          });
-      }
-    };
-
-    if (loading) {
-      let extraPath = "";
-      if (internalPaths) {
-        extraPath = `?prefix=${internalPaths}/`;
-      }
-
-      let currentTimestamp = Date.now() + 0;
-      setLoadingStartTime(currentTimestamp);
-      setLoadingMessage(defLoading);
-
-      api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/objects${extraPath}`)
-        .then((res: BucketObjectsList) => {
-          setSelectedBucket(bucketName);
-
-          const records: BucketObject[] = res.objects || [];
-          const folders: BucketObject[] = [];
-          const files: BucketObject[] = [];
-
-          records.forEach((record) => {
-            // this is a folder
-            if (record.name.endsWith("/")) {
-              folders.push(record);
-            } else {
-              // this is a file
-              files.push(record);
-            }
-          });
-
-          const recordsInElement = [...folders, ...files];
-
-          setRecords(recordsInElement);
-          // In case no objects were retrieved, We check if item is a file
-          if (!res.objects && extraPath !== "") {
-            verifyIfIsFile();
-            return;
-          }
-          setLoading(false);
-        })
-        .catch((err: ErrorResponseHandler) => {
-          setLoading(false);
-          setErrorSnackMessage(err);
-        });
-    }
-  }, [
-    loading,
-    match,
-    setLastAsFile,
-    setErrorSnackMessage,
-    bucketName,
-    rewindEnabled,
-    rewindDate,
-  ]);
-
-  useEffect(() => {
-    const url = get(match, "url", "/object-browser");
-    if (url !== routesList[routesList.length - 1].route) {
-      setAllRoutes(url);
-    }
-  }, [match, routesList, setAllRoutes]);
-
-  useEffect(() => {
-    setLoading(true);
-  }, [routesList, setLoading]);
+  // useEffect(() => {
+  //   const url = get(match, "url", `/buckets/${bucketName}/browse`);
+  //   if (url !== routesList[routesList.length - 1].route) {
+  //     setAllRoutes(url);
+  //   }
+  // }, [match, routesList, setAllRoutes]);
 
   const closeDeleteModalAndRefresh = (refresh: boolean) => {
     setDeleteOpen(false);
@@ -597,7 +371,7 @@ const ListObjects = ({
   };
 
   const openPath = (idElement: string) => {
-    const currentPath = get(match, "url", "/object-browser");
+    const currentPath = get(match, "url", `/buckets/${bucketName}/browse`);
 
     // Element is a folder, we redirect to it
     if (idElement.endsWith("/")) {
@@ -817,8 +591,7 @@ const ListObjects = ({
           bucketName={bucketName}
         />
       )}
-      <PageHeader label="Object Browser" />
-      <Grid container className={classes.container}>
+      <Grid container>
         <Grid item xs={12}>
           <ScreenTitle
             icon={
@@ -829,7 +602,10 @@ const ListObjects = ({
             title={pageTitle}
             subTitle={
               <Fragment>
-                <BrowserBreadcrumbs title={false} />
+                <BrowserBreadcrumbs
+                  bucketName={bucketName}
+                  internalPaths={internalPaths}
+                />
               </Fragment>
             }
             actions={
@@ -949,7 +725,8 @@ const ListObjects = ({
             itemActions={tableActions}
             columns={rewindEnabled ? rewindModeColumns : listModeColumns}
             isLoading={rewindEnabled ? loadingRewind : loading}
-            loadingMessage={loadingMessage}
+            // TODO/ READD
+            // loadingMessage={loadingMessage}
             entityName="Rewind Objects"
             idField="name"
             records={rewindEnabled ? rewind : filteredRecords}

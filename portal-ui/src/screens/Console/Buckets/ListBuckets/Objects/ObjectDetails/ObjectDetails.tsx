@@ -207,7 +207,6 @@ const styles = (theme: Theme) =>
 
 interface IObjectDetailsProps {
   classes: any;
-  routesList: Route[];
   downloadingFiles: string[];
   rewindEnabled: boolean;
   rewindDate: any;
@@ -218,6 +217,8 @@ interface IObjectDetailsProps {
   setSnackBarMessage: typeof setSnackBarMessage;
   fileIsBeingPrepared: typeof fileIsBeingPrepared;
   fileDownloadStarted: typeof fileDownloadStarted;
+  internalPaths: string;
+  bucketName: string;
 }
 
 const emptyFile: IFileInfo = {
@@ -234,7 +235,6 @@ const emptyFile: IFileInfo = {
 
 const ObjectDetails = ({
   classes,
-  routesList,
   downloadingFiles,
   rewindEnabled,
   rewindDate,
@@ -245,6 +245,8 @@ const ObjectDetails = ({
   setSnackBarMessage,
   fileIsBeingPrepared,
   fileDownloadStarted,
+  internalPaths,
+  bucketName,
 }: IObjectDetailsProps) => {
   const [loadObjectData, setLoadObjectData] = useState<boolean>(true);
   const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
@@ -261,10 +263,8 @@ const ObjectDetails = ({
   const [metadata, setMetadata] = useState<any>({});
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
-  const currentItem = routesList[routesList.length - 1];
-  const allPathData = currentItem.route.split("/");
+  const allPathData = internalPaths.split("/");
   const objectName = allPathData[allPathData.length - 1];
-  const bucketName = allPathData[2];
   const pathInBucket = allPathData.slice(3).join("/");
 
   useEffect(() => {
@@ -507,9 +507,7 @@ const ObjectDetails = ({
           actualInfo={actualInfo}
         />
       )}
-      <PageHeader label={"Object Browser"} />
-
-      <Grid container className={classes.container}>
+      <Grid container>
         <Grid item xs={12}>
           <ScreenTitle
             icon={
@@ -520,7 +518,10 @@ const ObjectDetails = ({
             title={objectName}
             subTitle={
               <Fragment>
-                <BrowserBreadcrumbs title={false} />
+                <BrowserBreadcrumbs
+                  internalPaths={internalPaths}
+                  bucketName={bucketName}
+                />
               </Fragment>
             }
             actions={

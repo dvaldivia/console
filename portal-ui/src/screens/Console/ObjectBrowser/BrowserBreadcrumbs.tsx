@@ -36,7 +36,8 @@ interface IObjectBrowser {
   rewindEnabled: boolean;
   rewindDate: any;
   removeRouteLevel: (path: string) => any;
-  title?: boolean;
+  internalPaths: string;
+  bucketName: string;
 }
 
 const styles = (theme: Theme) =>
@@ -46,45 +47,38 @@ const styles = (theme: Theme) =>
 
 const BrowserBreadcrumbs = ({
   classes,
-  objectsList,
+
   rewindEnabled,
   rewindDate,
   removeRouteLevel,
-  title = true,
+  internalPaths,
+  bucketName,
 }: IObjectBrowser) => {
-  const listBreadcrumbs = objectsList.map((objectItem, index) => {
-    return (
-      <React.Fragment key={`breadcrumbs-${index.toString()}`}>
-        <Link
-          to={objectItem.route}
-          onClick={() => {
-            removeRouteLevel(objectItem.route);
-          }}
-        >
-          {objectItem.label}
-        </Link>
-        {index < objectsList.length - 1 && <span> / </span>}
-      </React.Fragment>
-    );
-  });
+  const objectsList = internalPaths.split("/");
+  const listBreadcrumbs = objectsList
+    .filter((x) => {
+      return x !== "";
+    })
+    .map((objectItem, index) => {
+      let fullRoute = objectsList.slice(0, index + 1).join("/");
+
+      return (
+        <React.Fragment key={`breadcrumbs-${index.toString()}`}>
+          <Link to={`/buckets/${bucketName}/browse/${fullRoute}`}>
+            {objectItem}
+          </Link>
+          {index < objectsList.length - 1 && <span> / </span>}
+        </React.Fragment>
+      );
+    });
+  listBreadcrumbs.unshift(
+    <React.Fragment key={`breadcrumbs-as`}>
+      <Link to={`/buckets/${bucketName}/browse`}>root</Link>
+      {listBreadcrumbs.length > 0 && <span> / </span>}
+    </React.Fragment>
+  );
   return (
     <React.Fragment>
-      {title && (
-        <Grid item xs={12}>
-          <div className={classes.sectionTitle}>
-            {objectsList && objectsList.length > 0
-              ? objectsList.slice(-1)[0].label
-              : ""}
-            {rewindEnabled && objectsList.length > 1 && (
-              <small className={classes.smallLabel}>
-                &nbsp;(Rewind:{" "}
-                <Moment date={rewindDate} format="MMMM Do YYYY, h:mm a" /> )
-              </small>
-            )}
-          </div>
-        </Grid>
-      )}
-
       <Grid item xs={12} className={classes.breadcrumbs}>
         {listBreadcrumbs}
       </Grid>

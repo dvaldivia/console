@@ -225,7 +225,7 @@ const BrowseBuckets = ({
             title={"All Buckets"}
             subTitle={
               <Fragment>
-                <BrowserBreadcrumbs title={false} />
+                <BrowserBreadcrumbs internalPaths={""} bucketName={""} />
               </Fragment>
             }
             actions={

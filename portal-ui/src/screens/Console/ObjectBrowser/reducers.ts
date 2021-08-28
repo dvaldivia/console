@@ -101,10 +101,10 @@ export function objectBrowserReducer(
     case OBJECT_BROWSER_SET_ALL_ROUTES:
       const splitRoutes = action.currentRoute.split("/");
       const routesArray: Route[] = [];
-      let initRoute = initialRoute[0].route;
+      let initRoute = "";
 
       splitRoutes.forEach((route) => {
-        if (route !== "" && route !== "object-browser") {
+        if (route !== "") {
           initRoute = `${initRoute}/${route}`;
 
           routesArray.push({
@@ -115,7 +115,10 @@ export function objectBrowserReducer(
         }
       });
 
-      const newSetOfRoutes = [...initialRoute, ...routesArray];
+      console.log(`action.currentRoute ${action.currentRoute}`);
+      console.log(`routesArray`, routesArray);
+
+      const newSetOfRoutes = [...routesArray];
 
       return {
         ...state,
