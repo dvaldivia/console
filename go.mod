@@ -27,6 +27,7 @@ require (
 	github.com/minio/pkg v1.1.5
 	github.com/minio/selfupdate v0.3.1
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/nats-io/nats.go v1.13.0 // indirect
 	github.com/rs/xid v1.3.0
 	github.com/secure-io/sio-go v0.3.1
 	github.com/stretchr/testify v1.7.0

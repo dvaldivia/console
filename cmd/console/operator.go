@@ -242,5 +242,8 @@ func startOperatorServer(ctx *cli.Context) error {
 		}
 	}()
 
+	// Connect to subnet if we can
+	operatorapi.Subnet()
+
 	return server.Serve()
 }
