@@ -56,9 +56,6 @@ const styles = (theme: Theme) =>
       textAlign: "right",
       marginTop: ".9rem",
     },
-    predefinedTitle: {
-      fontWeight: "normal",
-    },
   });
 
 const SetPolicy = ({
@@ -150,14 +147,12 @@ const SetPolicy = ({
     >
       <Grid item xs={12}>
         <PredefinedList
-          classes={classes}
           label={`Selected ${selectedGroup !== null ? "Group" : "User"}`}
           content={selectedGroup !== null ? selectedGroup : userName}
         />
       </Grid>
       <Grid item xs={12}>
         <PredefinedList
-          classes={classes}
           label={"Current Policy"}
           content={actualPolicy.join(", ")}
         />

@@ -79,7 +79,7 @@ import SearchBox from "../../../../Common/SearchBox";
 
 import withSuspense from "../../../../Common/Components/withSuspense";
 import { displayName } from "./utils";
-import { UploadFolderIcon, DownloadIcon } from "../../../../../../icons";
+import { DownloadIcon, UploadFolderIcon } from "../../../../../../icons";
 
 const AddFolderIcon = React.lazy(
   () => import("../../../../../../icons/AddFolderIcon")
@@ -203,6 +203,8 @@ const styles = (theme: Theme) =>
     screenTitle: {
       borderBottom: 0,
       paddingTop: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
     },
     ...tableStyles,
     ...actionsTray,
@@ -1079,7 +1081,7 @@ const ListObjects = ({
       <PageLayout>
         <Grid item xs={12}>
           <ScreenTitle
-            classes={classes}
+            className={classes.screenTitle}
             icon={
               <Fragment>
                 <FolderIcon width={40} />
@@ -1203,8 +1205,8 @@ const ListObjects = ({
           >
             <SearchBox
               onChange={setFilterObjects}
-              classes={classes}
               placeholder="Search Objects"
+              overrideClass={classes.searchField}
             />
           </SecureComponent>
           <div>

@@ -33,10 +33,6 @@ const styles = (theme: Theme) =>
       textAlign: "right",
       marginTop: "1rem",
     },
-    predefinedTitle: {
-      color: "rgba(0,0,0,.87)",
-      fontWeight: "normal",
-    },
     ...formFieldStyles,
     ...modalBasic,
   });
@@ -71,11 +67,7 @@ const AddGroupMember = ({
   return (
     <ModalWrapper modalOpen={open} onClose={onClose} title={title}>
       <div className={classes.formFieldRow}>
-        <PredefinedList
-          classes={classes}
-          label={`Selected Group`}
-          content={selectedGroup}
-        />
+        <PredefinedList label={`Selected Group`} content={selectedGroup} />
       </div>
       <UsersSelectors
         selectedUsers={selectedUsers}

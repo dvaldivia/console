@@ -48,9 +48,9 @@ const NotificationTypeSelector = ({ classes }: INotificationTypeSelector) => {
     <Fragment>
       <PageHeader label="Notification Endpoints" />
       <BackLink
-        classes={classes}
         to="/notification-endpoints"
         label="Return to Configured Endpoints"
+        className={classes.link}
       />
       <PageLayout>
         <div className={classes.iconContainer}>

@@ -304,7 +304,6 @@ const LogsSearchMain = ({
           <Grid item xs={12} className={`${classes.searchOptions}`}>
             <div className={classes.dateRangePicker}>
               <DateRangeSelector
-                classes={classes}
                 setTimeEnd={setTimeEnd}
                 setTimeStart={setTimeStart}
                 timeEnd={timeEnd}
@@ -346,7 +345,6 @@ const LogsSearchMain = ({
               </div>
               <div className={classes.filtersContainer}>
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setBucket}
                   value={bucket}
                   label={"Bucket"}
@@ -354,7 +352,6 @@ const LogsSearchMain = ({
                   name="bucket"
                 />
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setApiName}
                   value={apiName}
                   label={"API Name"}
@@ -362,7 +359,6 @@ const LogsSearchMain = ({
                   name="api_name"
                 />
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setUserAgent}
                   value={userAgent}
                   label={"User Agent"}
@@ -372,7 +368,6 @@ const LogsSearchMain = ({
               </div>
               <div className={classes.filtersContainer}>
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setObject}
                   value={object}
                   label={"Object"}
@@ -380,7 +375,6 @@ const LogsSearchMain = ({
                   name="object"
                 />
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setRequestID}
                   value={requestID}
                   label={"Request ID"}
@@ -388,7 +382,6 @@ const LogsSearchMain = ({
                   name="request_id"
                 />
                 <FilterInputWrapper
-                  classes={classes}
                   onChange={setResponseStatus}
                   value={responseStatus}
                   label={"Response Status"}

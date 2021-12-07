@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useState, useEffect, useCallback } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
@@ -22,13 +22,13 @@ import withStyles from "@mui/styles/withStyles";
 import { Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {
-  updateAddField,
-  isPageValid,
-  addFileServerCert,
   addFileClientCert,
-  addFileVaultCert,
-  addFileVaultCa,
   addFileGemaltoCa,
+  addFileServerCert,
+  addFileVaultCa,
+  addFileVaultCert,
+  isPageValid,
+  updateAddField,
 } from "../../actions";
 import {
   createTenantCommon,
@@ -517,7 +517,6 @@ const Encryption = ({
                       <fieldset className={classes.fieldGroup}>
                         <legend>Encryption Service Certificates</legend>
                         <FileSelector
-                          classes={classes}
                           onChange={(encodedValue, fileName) => {
                             addFileServerCert("key", fileName, encodedValue);
                             cleanValidation("serverKey");
@@ -531,7 +530,6 @@ const Encryption = ({
                           required={!enableAutoCert}
                         />
                         <FileSelector
-                          classes={classes}
                           onChange={(encodedValue, fileName) => {
                             addFileServerCert("cert", fileName, encodedValue);
                             cleanValidation("serverCert");
@@ -553,7 +551,6 @@ const Encryption = ({
                       <fieldset className={classes.fieldGroup}>
                         <legend>Mutual TLS authentication</legend>
                         <FileSelector
-                          classes={classes}
                           onChange={(encodedValue, fileName) => {
                             addFileClientCert("key", fileName, encodedValue);
                             cleanValidation("clientKey");
@@ -567,7 +564,6 @@ const Encryption = ({
                           required={!enableAutoCert}
                         />
                         <FileSelector
-                          classes={classes}
                           onChange={(encodedValue, fileName) => {
                             addFileClientCert("cert", fileName, encodedValue);
                             cleanValidation("clientCert");
@@ -698,7 +694,6 @@ const Encryption = ({
                 <fieldset className={classes.fieldGroup}>
                   <legend>Mutual TLS authentication (optional)</legend>
                   <FileSelector
-                    classes={classes}
                     onChange={(encodedValue, fileName) => {
                       addFileVaultCert("key", fileName, encodedValue);
                       cleanValidation("vault_key");
@@ -710,7 +705,6 @@ const Encryption = ({
                     value={vaultCertificate.key}
                   />
                   <FileSelector
-                    classes={classes}
                     onChange={(encodedValue, fileName) => {
                       addFileVaultCert("cert", fileName, encodedValue);
                       cleanValidation("vault_cert");
@@ -722,7 +716,6 @@ const Encryption = ({
                     value={vaultCertificate.cert}
                   />
                   <FileSelector
-                    classes={classes}
                     onChange={(encodedValue, fileName) => {
                       addFileVaultCa(fileName, encodedValue);
                       cleanValidation("vault_ca");
@@ -1064,7 +1057,6 @@ const Encryption = ({
                   <legend>Custom CA Root certificate verification</legend>
 
                   <FileSelector
-                    classes={classes}
                     onChange={(encodedValue, fileName) => {
                       addFileGemaltoCa(fileName, encodedValue);
                       cleanValidation("gemalto_ca");

@@ -49,6 +49,7 @@ import SecureComponent, {
 } from "../../../common/SecureComponent/SecureComponent";
 
 import withSuspense from "../Common/Components/withSuspense";
+
 const DeleteGroup = withSuspense(React.lazy(() => import("./DeleteGroup")));
 const AddGroup = withSuspense(React.lazy(() => import("../Groups/AddGroup")));
 const SetPolicy = withSuspense(
@@ -208,11 +209,7 @@ const Groups = ({ classes, setErrorSnackMessage }: IGroupsProps) => {
             scopes={[IAM_SCOPES.ADMIN_LIST_GROUPS]}
             errorProps={{ disabled: true }}
           >
-            <SearchBox
-              placeholder={"Search Groups"}
-              onChange={setFilter}
-              classes={classes}
-            />
+            <SearchBox placeholder={"Search Groups"} onChange={setFilter} overrideClass={classes.searchField} />
           </SecureComponent>
 
           <SecureComponent

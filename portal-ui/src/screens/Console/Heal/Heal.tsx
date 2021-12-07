@@ -330,7 +330,6 @@ const Heal = ({ classes, distributedSetup }: IHeal) => {
               <CheckboxWrapper
                 name="recursive"
                 id="recursive"
-                classes={classes}
                 value="recursive"
                 checked={recursive}
                 onChange={(e) => {
@@ -342,7 +341,6 @@ const Heal = ({ classes, distributedSetup }: IHeal) => {
               <CheckboxWrapper
                 name="forceStart"
                 id="forceStart"
-                classes={classes}
                 value="forceStart"
                 checked={forceStart}
                 onChange={(e) => {
@@ -354,7 +352,6 @@ const Heal = ({ classes, distributedSetup }: IHeal) => {
               <CheckboxWrapper
                 name="forceStop"
                 id="forceStop"
-                classes={classes}
                 value="forceStop"
                 checked={forceStop}
                 onChange={(e) => {

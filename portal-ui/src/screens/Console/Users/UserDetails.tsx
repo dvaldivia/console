@@ -387,7 +387,6 @@ const UserDetails = ({ classes, match }: IUserDetailsProps) => {
               content: (
                 <UserServiceAccountsPanel
                   user={userName}
-                  classes={classes}
                   hasPolicy={hasPolicy}
                 />
               ),

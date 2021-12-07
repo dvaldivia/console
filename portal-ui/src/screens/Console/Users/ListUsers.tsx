@@ -239,7 +239,7 @@ const ListUsers = ({ classes, setErrorSnackMessage, history }: IUsersProps) => {
           <SearchBox
             placeholder={"Search Users"}
             onChange={setFilter}
-            classes={classes}
+            overrideClass={classes.searchField}
           />
           <Button
             variant="outlined"

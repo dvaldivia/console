@@ -149,7 +149,6 @@ const ConfTargetGeneric = ({
 
         return (
           <FormSwitchWrapper
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const value = e.target.checked ? "true" : "false";
               setValueElement(field.name, value, item);
@@ -165,7 +164,6 @@ const ConfTargetGeneric = ({
       case "csv":
         return (
           <CSVMultiSelector
-            classes={classes}
             elements={valueHolder[item] ? valueHolder[item].value : ""}
             label={field.label}
             name={field.name}
@@ -180,7 +178,6 @@ const ConfTargetGeneric = ({
       case "comment":
         return (
           <CommentBoxWrapper
-            classes={classes}
             id={field.name}
             name={field.name}
             label={field.label}
@@ -195,7 +192,6 @@ const ConfTargetGeneric = ({
       default:
         return (
           <InputBoxWrapper
-            classes={classes}
             id={field.name}
             name={field.name}
             label={field.label}

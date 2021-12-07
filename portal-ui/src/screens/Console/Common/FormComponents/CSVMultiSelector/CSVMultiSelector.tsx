@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import React, {
-  useState,
-  useEffect,
-  createRef,
-  useLayoutEffect,
   ChangeEvent,
+  createRef,
+  useEffect,
+  useLayoutEffect,
   useRef,
+  useState,
 } from "react";
 import get from "lodash/get";
 import debounce from "lodash/debounce";
@@ -59,6 +59,9 @@ const styles = (theme: Theme) =>
     labelContainer: {
       display: "flex",
     },
+    inputBoxSpacer: {
+      marginBottom: 7,
+    }
   });
 
 const CSVMultiSelector = ({
@@ -143,21 +146,24 @@ const CSVMultiSelector = ({
 
   const inputs = currentElements.map((element, index) => {
     return (
-      <InputBoxWrapper
-        id={`${name}-${index.toString()}`}
-        label={""}
-        classes={classes}
-        name={`${name}-${index.toString()}`}
-        value={currentElements[index]}
-        onChange={onChangeElement}
-        index={index}
-        key={`csv-${name}-${index.toString()}`}
-        placeholder={commonPlaceholder}
-        overlayIcon={index === currentElements.length - 1 ? <AddIcon /> : null}
-        overlayAction={() => {
-          addEmptyLine(currentElements);
-        }}
-      />
+      <div className={classes.inputBoxSpacer}>
+        <InputBoxWrapper
+          id={`${name}-${index.toString()}`}
+          label={""}
+          name={`${name}-${index.toString()}`}
+          value={currentElements[index]}
+          onChange={onChangeElement}
+          index={index}
+          key={`csv-${name}-${index.toString()}`}
+          placeholder={commonPlaceholder}
+          overlayIcon={
+            index === currentElements.length - 1 ? <AddIcon /> : null
+          }
+          overlayAction={() => {
+            addEmptyLine(currentElements);
+          }}
+        />
+      </div>
     );
   });
 

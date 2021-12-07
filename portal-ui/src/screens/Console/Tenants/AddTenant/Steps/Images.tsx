@@ -328,7 +328,6 @@ const Images = ({
           <InputBoxWrapper
             id="image"
             name="image"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("imageName", e.target.value);
               cleanValidation("image");
@@ -343,7 +342,6 @@ const Images = ({
           <InputBoxWrapper
             id="logSearchImage"
             name="logSearchImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("logSearchImage", e.target.value);
               cleanValidation("logSearchImage");
@@ -358,7 +356,6 @@ const Images = ({
           <InputBoxWrapper
             id="kesImage"
             name="kesImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("kesImage", e.target.value);
               cleanValidation("kesImage");
@@ -373,7 +370,6 @@ const Images = ({
           <InputBoxWrapper
             id="logSearchPostgresImage"
             name="logSearchPostgresImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("logSearchPostgresImage", e.target.value);
               cleanValidation("logSearchPostgresImage");
@@ -388,7 +384,6 @@ const Images = ({
           <InputBoxWrapper
             id="logSearchPostgresInitImage"
             name="logSearchPostgresInitImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("logSearchPostgresInitImage", e.target.value);
               cleanValidation("logSearchPostgresInitImage");
@@ -403,7 +398,6 @@ const Images = ({
           <InputBoxWrapper
             id="prometheusImage"
             name="prometheusImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("prometheusImage", e.target.value);
               cleanValidation("prometheusImage");
@@ -418,7 +412,6 @@ const Images = ({
           <InputBoxWrapper
             id="prometheusSidecarImage"
             name="prometheusSidecarImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("prometheusSidecarImage", e.target.value);
               cleanValidation("prometheusSidecarImage");
@@ -433,7 +426,6 @@ const Images = ({
           <InputBoxWrapper
             id="prometheusInitImage"
             name="prometheusInitImage"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("prometheusInitImage", e.target.value);
               cleanValidation("prometheusInitImage");
@@ -453,7 +445,6 @@ const Images = ({
               value="custom_docker_hub"
               id="custom_docker_hub"
               name="custom_docker_hub"
-              classes={classes}
               checked={customDockerhub}
               onChange={(e) => {
                 const targetD = e.target;
@@ -472,7 +463,6 @@ const Images = ({
             <InputBoxWrapper
               id="registry"
               name="registry"
-              classes={classes}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 updateField("imageRegistry", e.target.value);
               }}
@@ -487,7 +477,6 @@ const Images = ({
             <InputBoxWrapper
               id="registryUsername"
               name="registryUsername"
-              classes={classes}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 updateField("imageRegistryUsername", e.target.value);
               }}
@@ -501,7 +490,6 @@ const Images = ({
             <InputBoxWrapper
               id="registryPassword"
               name="registryPassword"
-              classes={classes}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 updateField("imageRegistryPassword", e.target.value);
               }}
