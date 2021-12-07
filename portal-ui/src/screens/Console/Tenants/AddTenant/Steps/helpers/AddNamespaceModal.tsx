@@ -96,7 +96,6 @@ const AddNamespaceModal = ({
   return (
     <Dialog
       open={addNamespaceOpen}
-      classes={classes}
       onClose={() => {
         closeAddNamespaceModalAndRefresh(false);
       }}

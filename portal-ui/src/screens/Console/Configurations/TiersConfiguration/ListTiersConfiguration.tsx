@@ -198,11 +198,7 @@ const ListTiersConfiguration = ({
       <PageHeader label="Tiers" />
       <PageLayout>
         <Grid item xs={12} className={classes.actionsTray}>
-          <SearchBox
-            placeholder="Filter"
-            onChange={setFilter}
-            classes={classes}
-          />
+          <SearchBox placeholder="Filter" onChange={setFilter} />
 
           <div className={classes.rightActionButtons}>
             <BoxIconButton

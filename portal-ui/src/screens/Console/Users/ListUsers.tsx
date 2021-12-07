@@ -236,11 +236,7 @@ const ListUsers = ({ classes, setErrorSnackMessage, history }: IUsersProps) => {
       <PageHeader label={"Users"} />
       <PageLayout>
         <Grid item xs={12} className={classes.actionsTray}>
-          <SearchBox
-            placeholder={"Search Users"}
-            onChange={setFilter}
-            classes={classes}
-          />
+          <SearchBox placeholder={"Search Users"} onChange={setFilter} />
           <Button
             variant="outlined"
             color="primary"

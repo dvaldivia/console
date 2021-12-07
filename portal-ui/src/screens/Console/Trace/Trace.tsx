@@ -308,7 +308,6 @@ const Trace = ({
             <div className={classes.midColumnCheckboxes}>
               <CheckboxWrapper
                 checked={all}
-                classes={classes}
                 id={"all_calls"}
                 name={"all_calls"}
                 label={"All"}
@@ -321,7 +320,6 @@ const Trace = ({
               <CheckboxWrapper
                 checked={s3 || all}
                 id={"s3_calls"}
-                classes={classes}
                 name={"s3_calls"}
                 label={"S3"}
                 onChange={(item) => {
@@ -333,7 +331,6 @@ const Trace = ({
               <CheckboxWrapper
                 checked={internal || all}
                 id={"internal_calls"}
-                classes={classes}
                 name={"internal_calls"}
                 label={"Internal"}
                 onChange={(item) => {
@@ -345,7 +342,6 @@ const Trace = ({
               <CheckboxWrapper
                 checked={storage || all}
                 id={"storage_calls"}
-                classes={classes}
                 name={"storage_calls"}
                 label={"Storage"}
                 onChange={(item) => {
@@ -357,7 +353,6 @@ const Trace = ({
               <CheckboxWrapper
                 checked={os || all}
                 id={"os_calls"}
-                classes={classes}
                 name={"os_calls"}
                 label={"OS"}
                 onChange={(item) => {
@@ -373,7 +368,6 @@ const Trace = ({
             <CheckboxWrapper
               checked={errors}
               id={"only_errors"}
-              classes={classes}
               name={"only_errors"}
               label={"Display only Errors"}
               onChange={(item) => {

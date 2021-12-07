@@ -52,7 +52,6 @@ const ConfirmDialog = ({
   return (
     <Dialog
       open={isOpen}
-      classes={classes}
       onClose={(event, reason) => {
         if (reason !== "backdropClick") {
           onClose(); // close on Esc but not on click outside

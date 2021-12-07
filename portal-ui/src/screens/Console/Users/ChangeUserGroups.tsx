@@ -168,7 +168,6 @@ const ChangeUserGroups = ({
           <Grid container>
             <Grid item xs={12} className={classes.formScrollable}>
               <GroupsSelectors
-                classes={classes}
                 selectedGroups={selectedGroups}
                 setSelectedGroups={(elements: string[]) => {
                   setSelectedGroups(elements);

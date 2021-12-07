@@ -260,11 +260,7 @@ const ListBuckets = ({
       <PageHeader label={"Buckets"} />
       <PageLayout>
         <Grid item xs={12} className={classes.actionsTray} display="flex">
-          <SearchBox
-            onChange={setFilterBuckets}
-            classes={classes}
-            placeholder="Search Buckets"
-          />
+          <SearchBox onChange={setFilterBuckets} placeholder="Search Buckets" />
 
           <Grid
             item

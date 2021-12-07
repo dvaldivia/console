@@ -336,7 +336,6 @@ const TenantSize = ({
           id="nodes"
           name="nodes"
           type="number"
-          classes={classes}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             updateField("nodes", e.target.value);
             cleanValidation("nodes");
@@ -354,7 +353,6 @@ const TenantSize = ({
           id="drivesps"
           name="drivesps"
           type="number"
-          classes={classes}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             updateField("drivesPerServer", e.target.value);
             cleanValidation("drivesps");
@@ -375,7 +373,6 @@ const TenantSize = ({
                 type="number"
                 id="volume_size"
                 name="volume_size"
-                classes={classes}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   updateField("volumeSize", e.target.value);
                   cleanValidation("volume_size");
@@ -391,7 +388,6 @@ const TenantSize = ({
                 <SelectWrapper
                   label={""}
                   id="size_factor"
-                  classes={classes}
                   name="size_factor"
                   value={sizeFactor}
                   disabled={selectedStorageClass === ""}
@@ -412,7 +408,6 @@ const TenantSize = ({
             type="number"
             id="memory_per_node"
             name="memory_per_node"
-            classes={classes}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               updateField("memoryNode", e.target.value);
               cleanValidation("memory_per_node");
@@ -429,7 +424,6 @@ const TenantSize = ({
           <SelectWrapper
             id="ec_parity"
             name="ec_parity"
-            classes={classes}
             onChange={(e: SelectChangeEvent<string>) => {
               updateField("ecParity", e.target.value as string);
             }}

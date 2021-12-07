@@ -251,7 +251,6 @@ const Account = ({
           <SearchBox
             placeholder={"Search Service Accounts"}
             onChange={setFilter}
-            classes={classes}
           />
 
           <Button

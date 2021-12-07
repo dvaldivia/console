@@ -155,11 +155,7 @@ const ListNotificationEndpoints = ({
     <Fragment>
       <PageLayout>
         <Grid item xs={12} className={classes.actionsTray}>
-          <SearchBox
-            classes={classes}
-            placeholder="Search target"
-            onChange={setFilter}
-          />
+          <SearchBox placeholder="Search target" onChange={setFilter} />
           <div className={classes.rightActionItems}>
             <BoxIconButton
               color="primary"

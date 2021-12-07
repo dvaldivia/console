@@ -93,7 +93,6 @@ const ResetConfigurationModal = ({
   return (
     <Dialog
       open={resetOpen}
-      classes={classes}
       onClose={() => {
         closeResetModalAndRefresh(false);
       }}
