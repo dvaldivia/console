@@ -49,6 +49,7 @@ import SecureComponent, {
 import SearchBox from "../Common/SearchBox";
 
 import withSuspense from "../Common/Components/withSuspense";
+
 const AddPolicy = withSuspense(React.lazy(() => import("./AddPolicy")));
 const DeletePolicy = withSuspense(React.lazy(() => import("./DeletePolicy")));
 
@@ -225,7 +226,6 @@ const ListPolicies = ({ classes, setErrorSnackMessage }: IPoliciesProps) => {
         <Grid item xs={12} className={classes.actionsTray}>
           <SearchBox
             onChange={setFilterPolicies}
-            classes={classes}
             placeholder="Search Policies"
           />
 

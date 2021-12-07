@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import Grid from "@mui/material/Grid";
@@ -448,7 +448,6 @@ const AddTierConfiguration = ({
                       <div className={classes.formFieldRow}>
                         <FileSelector
                           accept=".json"
-                          classes={classes}
                           id="creds"
                           label="Credentials"
                           name="creds"

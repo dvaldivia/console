@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import React, {
-  useState,
-  useEffect,
-  createRef,
-  useLayoutEffect,
   ChangeEvent,
+  createRef,
+  useEffect,
+  useLayoutEffect,
   useRef,
+  useState,
 } from "react";
 import get from "lodash/get";
 import debounce from "lodash/debounce";
@@ -146,7 +146,6 @@ const CSVMultiSelector = ({
       <InputBoxWrapper
         id={`${name}-${index.toString()}`}
         label={""}
-        classes={classes}
         name={`${name}-${index.toString()}`}
         value={currentElements[index]}
         onChange={onChangeElement}

@@ -510,7 +510,6 @@ const Configure = ({
           id="expose_minio"
           name="expose_minio"
           checked={exposeMinIO}
-          classes={classes}
           onChange={(e) => {
             const targetD = e.target;
             const checked = targetD.checked;
@@ -525,7 +524,6 @@ const Configure = ({
           value="expose_console"
           id="expose_console"
           name="expose_console"
-          classes={classes}
           checked={exposeConsole}
           onChange={(e) => {
             const targetD = e.target;
@@ -572,7 +570,6 @@ const Configure = ({
                 <div className={classes.containerItem}>
                   <InputBoxWrapper
                     type="number"
-                    classes={classes}
                     id="tenant_securityContext_runAsUser"
                     name="tenant_securityContext_runAsUser"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -594,7 +591,6 @@ const Configure = ({
                 <div className={classes.containerItem}>
                   <InputBoxWrapper
                     type="number"
-                    classes={classes}
                     id="tenant_securityContext_runAsGroup"
                     name="tenant_securityContext_runAsGroup"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -617,7 +613,6 @@ const Configure = ({
                 <div className={classes.containerItem}>
                   <InputBoxWrapper
                     type="number"
-                    classes={classes}
                     id="tenant_securityContext_fsGroup"
                     name="tenant_securityContext_fsGroup"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -642,7 +637,6 @@ const Configure = ({
             <Grid item xs={12} className={classes.configSectionItem}>
               <div className={classes.multiContainer}>
                 <FormSwitchWrapper
-                  classes={classes}
                   value="tenantSecurityContextRunAsNonRoot"
                   id="tenant_securityContext_runAsNonRoot"
                   name="tenant_securityContext_runAsNonRoot"
@@ -681,7 +675,6 @@ const Configure = ({
         <Grid xs={12} className={classes.logSearchCustomFields}>
           <Grid item xs={12}>
             <SelectWrapper
-              classes={classes}
               id="log_search_storage_class"
               name="log_search_storage_class"
               onChange={(e: SelectChangeEvent<string>) => {
@@ -702,7 +695,6 @@ const Configure = ({
                 type="number"
                 id="log_search_volume_size"
                 name="log_search_volume_size"
-                classes={classes}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   updateField("logSearchVolumeSize", e.target.value);
                   cleanValidation("log_search_volume_size");
@@ -732,7 +724,6 @@ const Configure = ({
                     type="number"
                     id="logSearch_securityContext_runAsUser"
                     name="logSearch_securityContext_runAsUser"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchSecurityContext", {
                         ...logSearchSecurityContext,
@@ -755,7 +746,6 @@ const Configure = ({
                     type="number"
                     id="logSearch_securityContext_runAsGroup"
                     name="logSearch_securityContext_runAsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchSecurityContext", {
                         ...logSearchSecurityContext,
@@ -779,7 +769,6 @@ const Configure = ({
                     type="number"
                     id="logSearch_securityContext_fsGroup"
                     name="logSearch_securityContext_fsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchSecurityContext", {
                         ...logSearchSecurityContext,
@@ -806,7 +795,6 @@ const Configure = ({
                   value="logSearchSecurityContextRunAsNonRoot"
                   id="logSearch_securityContext_runAsNonRoot"
                   name="logSearch_securityContext_runAsNonRoot"
-                  classes={classes}
                   checked={logSearchSecurityContext.runAsNonRoot}
                   onChange={(e) => {
                     const targetD = e.target;
@@ -835,7 +823,6 @@ const Configure = ({
                     type="number"
                     id="postgres_securityContext_runAsUser"
                     name="postgres_securityContext_runAsUser"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchPostgresSecurityContext", {
                         ...logSearchPostgresSecurityContext,
@@ -858,7 +845,6 @@ const Configure = ({
                     type="number"
                     id="postgres_securityContext_runAsGroup"
                     name="postgres_securityContext_runAsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchPostgresSecurityContext", {
                         ...logSearchPostgresSecurityContext,
@@ -881,7 +867,6 @@ const Configure = ({
                     type="number"
                     id="postgres_securityContext_fsGroup"
                     name="postgres_securityContext_fsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("logSearchPostgresSecurityContext", {
                         ...logSearchPostgresSecurityContext,
@@ -907,7 +892,6 @@ const Configure = ({
                   value="postgresSecurityContextRunAsNonRoot"
                   id="postgres_securityContext_runAsNonRoot"
                   name="postgres_securityContext_runAsNonRoot"
-                  classes={classes}
                   checked={logSearchPostgresSecurityContext.runAsNonRoot}
                   onChange={(e) => {
                     const targetD = e.target;
@@ -945,7 +929,6 @@ const Configure = ({
             <SelectWrapper
               id="prometheus_storage_class"
               name="prometheus_storage_class"
-              classes={classes}
               onChange={(e: SelectChangeEvent<string>) => {
                 updateField(
                   "prometheusSelectedStorageClass",
@@ -964,7 +947,6 @@ const Configure = ({
                 type="number"
                 id="prometheus_volume_size"
                 name="prometheus_volume_size"
-                classes={classes}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   updateField("prometheusVolumeSize", e.target.value);
                   cleanValidation("prometheus_volume_size");
@@ -992,7 +974,6 @@ const Configure = ({
                     type="number"
                     id="prometheus_securityContext_runAsUser"
                     name="prometheus_securityContext_runAsUser"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("prometheusSecurityContext", {
                         ...prometheusSecurityContext,
@@ -1016,7 +997,6 @@ const Configure = ({
                     type="number"
                     id="prometheus_securityContext_runAsGroup"
                     name="prometheus_securityContext_runAsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("prometheusSecurityContext", {
                         ...prometheusSecurityContext,
@@ -1040,7 +1020,6 @@ const Configure = ({
                     type="number"
                     id="prometheus_securityContext_fsGroup"
                     name="prometheus_securityContext_fsGroup"
-                    classes={classes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       updateField("prometheusSecurityContext", {
                         ...prometheusSecurityContext,
@@ -1068,7 +1047,6 @@ const Configure = ({
                   value="prometheusSecurityContextRunAsNonRoot"
                   id="prometheus_securityContext_runAsNonRoot"
                   name="prometheus_securityContext_runAsNonRoot"
-                  classes={classes}
                   checked={prometheusSecurityContext.runAsNonRoot}
                   onChange={(e) => {
                     const targetD = e.target;
