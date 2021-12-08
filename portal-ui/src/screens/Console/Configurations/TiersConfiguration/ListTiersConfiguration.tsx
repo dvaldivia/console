@@ -203,7 +203,6 @@ const ListTiersConfiguration = ({
             onChange={setFilter}
             overrideClass={classes.searchField}
           />
-
           <div className={classes.rightActionButtons}>
             <BoxIconButton
               color="primary"

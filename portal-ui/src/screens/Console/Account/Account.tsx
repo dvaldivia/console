@@ -252,7 +252,7 @@ const Account = ({
             placeholder={"Search Service Accounts"}
             onChange={setFilter}
             overrideClass={classes.searchField}
-          />
+           />
 
           <Button
             variant="contained"
