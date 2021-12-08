@@ -265,7 +265,6 @@ const ListBuckets = ({
             placeholder="Search Buckets"
             overrideClass={classes.searchField}
           />
-
           <Grid
             item
             xs={12}
