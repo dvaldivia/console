@@ -158,7 +158,6 @@ const styles = (theme: Theme) =>
             color: "white",
             width: 108,
           },
-          marginBottom: 10,
         },
         "& .text-line1": {
           font: " 100 44px 'Lato'",
@@ -617,7 +616,6 @@ const Login = ({
               <div className="left-logo">
                 <LoginMinIOLogo />
               </div>
-              <div className="text-line1">Welcome to</div>
               <div className="text-line2">{consoleText}</div>
               <div className="text-line3">Multi-Cloud Object Storage</div>
             </div>
