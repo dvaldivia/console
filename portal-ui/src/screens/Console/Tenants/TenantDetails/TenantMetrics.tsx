@@ -59,7 +59,7 @@ const TenantMetrics = ({ classes }: ITenantMetrics) => {
         className={classes.iframeStyle}
         title={"metrics"}
         src={`/api/proxy/${tenantNamespace || ""}/${tenantName || ""}${
-          IAM_PAGES.DASHBOARD
+          IAM_PAGES.TOOLS_ADV_METRICS
         }?cp=y`}
         onLoad={() => {
           setLoading(false);

@@ -30,7 +30,7 @@ import {
 
 const ServersList = ({ data }: { data: ServerInfo[] }) => {
   const [expanded, setExpanded] = React.useState<string>(
-    data.length > 1 ? "" : data[0].endpoint + "-0"
+    data.length > 1 ? "" : data.length === 1 ? data[0].endpoint + "-0" : ""
   );
 
   const handleClick = (key: string) => {

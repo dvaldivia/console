@@ -24,14 +24,17 @@ import { containerForHeader } from "../Common/FormComponents/common/styleLibrary
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
-import { LinearProgress } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import api from "../../../common/api";
 import { Usage } from "./types";
 
 import { ErrorResponseHandler } from "../../../common/types";
-import BasicDashboard from "./BasicDashboard/BasicDashboard";
 import { setErrorSnackMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
+import HelpBox from "../../../common/HelpBox";
+import { PrometheusErrorIcon } from "../../../icons";
+import PageLayout from "../Common/Layout/PageLayout";
+import BasicDashboard from "./BasicDashboard/BasicDashboard";
 
 interface IDashboardSimple {
   classes: any;
@@ -82,7 +85,66 @@ const Dashboard = ({ classes }: IDashboardSimple) => {
           {widgets !== null ? (
             <PrDashboard />
           ) : (
-            <BasicDashboard usage={basicResult} />
+            <PageLayout>
+              <Box>
+                {widgets?.prometheusNotReady && (
+                  <HelpBox
+                    iconComponent={<PrometheusErrorIcon />}
+                    title={"We can't retrieve advanced metrics at this time"}
+                    help={
+                      <Fragment>
+                        MinIO Dashboard will display basic metrics as we
+                        couldn't connect to Prometheus successfully.
+                        <br /> <br />
+                        Please try again in a few minutes. If the problem
+                        persists, you can review your configuration and confirm
+                        that Prometheus server is up and running.
+                      </Fragment>
+                    }
+                  />
+                )}
+
+                {!widgets?.prometheusNotReady && (
+                  <HelpBox
+                    iconComponent={<PrometheusErrorIcon />}
+                    title={"We can’t retrieve advanced metrics at this time."}
+                    help={
+                      <Box>
+                        <Box
+                          sx={{
+                            fontSize: "14px",
+                          }}
+                        >
+                          MinIO Dashboard will display basic metrics as we
+                          couldn’t connect to Prometheus successfully. Please
+                          try again in a few minutes. If the problem persists,
+                          you can review your configuration and confirm that
+                          Prometheus server is up and running.
+                        </Box>
+                        <Box
+                          sx={{
+                            paddingTop: "20px",
+                            fontSize: "14px",
+                            "& a": {
+                              color: (theme) => theme.colors.link,
+                            },
+                          }}
+                        >
+                          <a
+                            href="https://docs.min.io/minio/baremetal/monitoring/metrics-alerts/collect-minio-metrics-using-prometheus.html?ref=con#minio-metrics-collect-using-prometheus"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Read more about Prometheus on our Docs site.
+                          </a>
+                        </Box>
+                      </Box>
+                    }
+                  />
+                )}
+              </Box>
+              <BasicDashboard inUsage={widgets} />
+            </PageLayout>
           )}
         </Fragment>
       )}

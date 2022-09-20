@@ -890,49 +890,47 @@ func getUsageWidgetsForDeployment(ctx context.Context, prometheusURL string, mAd
 	if prometheusURL != "" && !testPrometheusURL(ctx, prometheusURL) {
 		prometheusNotReady = true
 	}
-	if prometheusURL == "" || prometheusNotReady {
-		// create a minioClient interface implementation
-		// defining the client to be used
-		adminClient := AdminClient{Client: mAdmin}
-		// serialize output
-		usage, err := GetAdminInfo(ctx, adminClient)
-		if err != nil {
-			return nil, err
-		}
-		sessionResp := &models.AdminInfoResponse{
-			Buckets:            usage.Buckets,
-			Objects:            usage.Objects,
-			Usage:              usage.Usage,
-			Servers:            usage.Servers,
-			PrometheusNotReady: prometheusNotReady,
-		}
-		return sessionResp, nil
+	adminClient := AdminClient{Client: mAdmin}
+	// serialize output
+	usage, err := GetAdminInfo(ctx, adminClient)
+	if err != nil {
+		return nil, err
+	}
+	sessionResp := &models.AdminInfoResponse{
+		Buckets:            usage.Buckets,
+		Objects:            usage.Objects,
+		Usage:              usage.Usage,
+		Servers:            usage.Servers,
+		PrometheusNotReady: prometheusNotReady,
 	}
 
-	var wdgts []*models.Widget
+	if prometheusURL != "" && !prometheusNotReady {
 
-	for _, m := range widgets {
-		// for each target we will launch another goroutine to fetch the values
-		wdgtResult := models.Widget{
-			ID:    m.ID,
-			Title: m.Title,
-			Type:  m.Type,
-		}
-		if len(m.Options.ReduceOptions.Calcs) > 0 {
-			wdgtResult.Options = &models.WidgetOptions{
-				ReduceOptions: &models.WidgetOptionsReduceOptions{
-					Calcs: m.Options.ReduceOptions.Calcs,
-				},
+		var wdgts []*models.Widget
+
+		for _, m := range widgets {
+			// for each target we will launch another goroutine to fetch the values
+			wdgtResult := models.Widget{
+				ID:    m.ID,
+				Title: m.Title,
+				Type:  m.Type,
 			}
+			if len(m.Options.ReduceOptions.Calcs) > 0 {
+				wdgtResult.Options = &models.WidgetOptions{
+					ReduceOptions: &models.WidgetOptionsReduceOptions{
+						Calcs: m.Options.ReduceOptions.Calcs,
+					},
+				}
+			}
+
+			wdgts = append(wdgts, &wdgtResult)
 		}
 
-		wdgts = append(wdgts, &wdgtResult)
+		// count the number of widgets that have completed calculating
+		// sessionResp := &models.AdminInfoResponse{}
+
+		sessionResp.Widgets = wdgts
 	}
-
-	// count the number of widgets that have completed calculating
-	sessionResp := &models.AdminInfoResponse{}
-
-	sessionResp.Widgets = wdgts
 	return sessionResp, nil
 }
 

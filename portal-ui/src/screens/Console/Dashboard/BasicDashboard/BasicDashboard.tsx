@@ -14,19 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import {
   ArrowRightIcon,
   BucketsIcon,
   DrivesIcon,
   HealIcon,
-  PrometheusErrorIcon,
   ServersIcon,
   TotalObjectsIcon,
   UptimeIcon,
 } from "../../../../icons";
-import HelpBox from "../../../../common/HelpBox";
 import { calculateBytes, representationNumber } from "../../../../common/utils";
 import { IDriveInfo, Usage } from "../types";
 import StatusCountCard from "./StatusCountCard";
@@ -40,6 +38,10 @@ import { Link } from "react-router-dom";
 import { IAM_PAGES } from "../../../../common/SecureComponent/permissions";
 import TimeStatItem from "../TimeStatItem";
 import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
+import { useAppDispatch } from "../../../../store";
+import api from "../../../../common/api";
+import { ErrorResponseHandler } from "../../../../common/types";
+import { setErrorSnackMessage } from "../../../../systemSlice";
 
 const BoxItem = ({ children }: { children: any }) => {
   return (
@@ -61,12 +63,8 @@ const BoxItem = ({ children }: { children: any }) => {
   );
 };
 
-interface IDashboardProps {
-  usage: Usage | null;
-}
-
 const getServersList = (usage: Usage | null) => {
-  if (usage !== null) {
+  if (usage !== null && usage.servers !== null) {
     return usage.servers.sort(function (a, b) {
       const nameA = a.endpoint.toLowerCase();
       const nameB = b.endpoint.toLowerCase();
@@ -91,7 +89,39 @@ const prettyUsage = (usage: string | undefined) => {
   return calculateBytes(usage);
 };
 
-const BasicDashboard = ({ usage }: IDashboardProps) => {
+interface IBasicDashboard {
+  inUsage?: Usage | null;
+}
+
+const BasicDashboard = ({ inUsage }: IBasicDashboard) => {
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [usage, setUsage] = useState<Usage | null>(null);
+  console.log(`inUsage ${inUsage}`);
+  const fetchUsage = useCallback(() => {
+    api
+      .invoke("GET", `/api/v1/admin/info`)
+      .then((res: Usage) => {
+        setUsage(res);
+        setLoading(false);
+      })
+      .catch((err: ErrorResponseHandler) => {
+        dispatch(setErrorSnackMessage(err));
+        setLoading(false);
+      });
+  }, [setUsage, setLoading, dispatch]);
+
+  useEffect(() => {
+    if (inUsage !== null && inUsage !== undefined) {
+      setUsage(inUsage);
+      setLoading(false);
+    } else {
+      if (loading) {
+        fetchUsage();
+      }
+    }
+  }, [loading, fetchUsage]);
+
   const usageValue = usage && usage.usage ? usage.usage.toString() : "0";
   const usageToRepresent = prettyUsage(usageValue);
 
@@ -134,64 +164,6 @@ const BasicDashboard = ({ usage }: IDashboardProps) => {
           marginRight: "40px",
         }}
       >
-        <Box>
-          {usage?.prometheusNotReady && (
-            <HelpBox
-              iconComponent={<PrometheusErrorIcon />}
-              title={"We can't retrieve advanced metrics at this time"}
-              help={
-                <Fragment>
-                  MinIO Dashboard will display basic metrics as we couldn't
-                  connect to Prometheus successfully.
-                  <br /> <br />
-                  Please try again in a few minutes. If the problem persists,
-                  you can review your configuration and confirm that Prometheus
-                  server is up and running.
-                </Fragment>
-              }
-            />
-          )}
-
-          {!usage?.prometheusNotReady && (
-            <HelpBox
-              iconComponent={<PrometheusErrorIcon />}
-              title={"We can’t retrieve advanced metrics at this time."}
-              help={
-                <Box>
-                  <Box
-                    sx={{
-                      fontSize: "14px",
-                    }}
-                  >
-                    MinIO Dashboard will display basic metrics as we couldn’t
-                    connect to Prometheus successfully. Please try again in a
-                    few minutes. If the problem persists, you can review your
-                    configuration and confirm that Prometheus server is up and
-                    running.
-                  </Box>
-                  <Box
-                    sx={{
-                      paddingTop: "20px",
-                      fontSize: "14px",
-                      "& a": {
-                        color: (theme) => theme.colors.link,
-                      },
-                    }}
-                  >
-                    <a
-                      href="https://docs.min.io/minio/baremetal/monitoring/metrics-alerts/collect-minio-metrics-using-prometheus.html?ref=con#minio-metrics-collect-using-prometheus"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Read more about Prometheus on our Docs site.
-                    </a>
-                  </Box>
-                </Box>
-              }
-            />
-          )}
-        </Box>
-
         <Box
           sx={{
             display: "grid",

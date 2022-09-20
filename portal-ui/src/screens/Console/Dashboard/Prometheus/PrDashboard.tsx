@@ -48,6 +48,9 @@ import {
 import MergedWidgetsRenderer from "./Widgets/MergedWidgetsRenderer";
 import PageLayout from "../../Common/Layout/PageLayout";
 import { setErrorSnackMessage } from "../../../../systemSlice";
+import BasicDashboard from "../BasicDashboard/BasicDashboard";
+import { Usage } from "../types";
+import get from "lodash/get";
 
 interface IPrDashboard {
   classes?: any;
@@ -81,6 +84,7 @@ const PrDashboard = ({ apiPrefix = "admin" }: IPrDashboard) => {
   const [panelInformation, setPanelInformation] =
     useState<IDashboardPanel[]>(panelsConfiguration);
   const [curTab, setCurTab] = useState<number>(0);
+  const [basicResult, setBasicResult] = useState<Usage | null>(null);
 
   const getPanelDetails = (id: number) => {
     return panelInformation.find((panel) => panel.id === id);
@@ -205,6 +209,8 @@ const PrDashboard = ({ apiPrefix = "admin" }: IPrDashboard) => {
     return renderPanelItems(resourcesPanelsLayoutAdvanced);
   };
 
+  const widgets = get(basicResult, "widgets", null);
+
   return (
     <PageLayout>
       {zoomOpen && (
@@ -228,6 +234,7 @@ const PrDashboard = ({ apiPrefix = "admin" }: IPrDashboard) => {
             { label: "Usage" },
             { label: "Traffic" },
             { label: "Resources" },
+            { label: "Info" },
           ]}
         />
       </Grid>
@@ -269,6 +276,9 @@ const PrDashboard = ({ apiPrefix = "admin" }: IPrDashboard) => {
             </h2>
             {panelInformation.length ? renderAdvancedResourcesPanels() : null}
           </RowPanelLayout>
+        </TabPanel>
+        <TabPanel index={3} value={curTab}>
+          <BasicDashboard inUsage={widgets} />
         </TabPanel>
       </Grid>
     </PageLayout>
