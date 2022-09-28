@@ -28,3 +28,10 @@ export interface BucketObjectItemsList {
   objects: BucketObjectItem[];
   total?: number;
 }
+
+export interface WebsocketRequest {
+  mode: "objects" | "rewind" | "close";
+  bucket_name: string;
+  prefix: string;
+  date: string;
+}
