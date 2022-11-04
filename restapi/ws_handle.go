@@ -537,6 +537,9 @@ func (wsc *wsAdminClient) profile(ctx context.Context, opts *profileOptions) {
 	sendWsCloseMessage(wsc.conn, err)
 }
 
+// Storage of Cancel Contexts
+var cancelContexts = make(map[int64]context.CancelFunc)
+
 func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 	// Initial goroutine
 	defer func() {
@@ -544,21 +547,42 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 		wsc.conn.close()
 	}()
 
-	writeChannel := make(chan ObjectResponse)
+	writeChannel := make(chan WSResponse)
 	done := make(chan interface{})
+
+	cancelCtx := func(contextID int64) {
+		fmt.Println("CONTEXTID", contextID)
+
+		prqRq := contextID - 1
+
+		prevRq, ok := cancelContexts[prqRq]
+
+		// Another request may be in progress, we look at it & cancel accordingly
+		if ok {
+			writeChannel <- WSResponse{
+				RequestID:  contextID,
+				RequestEnd: true,
+			}
+
+			prevRq()
+			delete(cancelContexts, prqRq)
+		}
+	}
 
 	// Read goroutine
 	go func() {
 		for {
+			ctx, cancel := context.WithCancel(context.Background())
+
 			mType, message, err := wsc.conn.readMessage()
 			if err != nil {
 				LogInfo("Error while reading objectManager message")
 				close(done)
+				cancel()
 				return
 			}
 
 			if mType == websocket.TextMessage {
-				ctx := context.Background()
 				// We get request data & review information
 				var messageRequest ObjectsRequest
 
@@ -566,14 +590,23 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 				if err != nil {
 					LogInfo("Error on message request unmarshal")
 					close(done)
+					cancel()
 					return
 				}
+
+				// We store the cancel context to use later
+				cancelContexts[messageRequest.RequestID] = cancel
+
+				prevRequestID := messageRequest.RequestID - 1
 
 				switch messageRequest.Mode {
 				case "close":
 					close(done)
 					return
 				case "objects":
+					fmt.Println("Mensaje Recibido...", prevRequestID)
+					cancelCtx(prevRequestID)
+
 					objectRqConfigs, err := getObjectsOptionsFromReq(messageRequest)
 					if err != nil {
 						LogInfo(fmt.Sprintf("Error during Objects OptionsParse %s", err.Error()))
@@ -583,12 +616,13 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 
 					for lsObj := range startObjectsListing(ctx, wsc.client, objectRqConfigs) {
 						if lsObj.Err != nil {
-							writeChannel <- ObjectResponse{
-								Error: lsObj.Err.Error(),
+							writeChannel <- WSResponse{
+								RequestID: messageRequest.RequestID,
+								Error:     lsObj.Err.Error(),
 							}
 						}
 
-						writeChannel <- ObjectResponse{
+						objItem := ObjectResponse{
 							Name:         lsObj.Key,
 							Size:         lsObj.Size,
 							LastModified: lsObj.LastModified.Format(time.RFC3339),
@@ -596,16 +630,22 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 							IsLatest:     lsObj.IsLatest,
 							DeleteMarker: lsObj.IsDeleteMarker,
 						}
+
+						writeChannel <- WSResponse{
+							RequestID: messageRequest.RequestID,
+							Data:      objItem,
+						}
 					}
 
-					writeChannel <- ObjectResponse{
-						RequestEnd: true,
-					}
+					cancelCtx(messageRequest.RequestID)
 				case "rewind":
+					cancelCtx(prevRequestID)
+
 					objectRqConfigs, err := getObjectsOptionsFromReq(messageRequest)
 					if err != nil {
 						LogInfo(fmt.Sprintf("Error during Objects OptionsParse %s", err.Error()))
 						close(done)
+						cancel()
 						return
 					}
 
@@ -613,6 +653,7 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 					if err != nil {
 						LogError("error creating S3Client:", err)
 						close(done)
+						cancel()
 						return
 					}
 
@@ -620,14 +661,15 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 
 					for lsObj := range startRewindListing(ctx, mcS3C, objectRqConfigs) {
 						if lsObj.Err != nil {
-							writeChannel <- ObjectResponse{
-								Error: lsObj.Err.String(),
+							writeChannel <- WSResponse{
+								RequestID: messageRequest.RequestID,
+								Error:     lsObj.Err.String(),
 							}
 						}
 
 						name := strings.ReplaceAll(lsObj.URL.Path, fmt.Sprintf("/%s/", objectRqConfigs.BucketName), "")
 
-						writeChannel <- ObjectResponse{
+						objItem := ObjectResponse{
 							Name:         name,
 							Size:         lsObj.Size,
 							LastModified: lsObj.Time.Format(time.RFC3339),
@@ -635,11 +677,14 @@ func (wsc *wsMinioClient) objectManager(session *models.Principal) {
 							IsLatest:     lsObj.IsLatest,
 							DeleteMarker: lsObj.IsDeleteMarker,
 						}
+
+						writeChannel <- WSResponse{
+							RequestID: messageRequest.RequestID,
+							Data:      objItem,
+						}
 					}
 
-					writeChannel <- ObjectResponse{
-						RequestEnd: true,
-					}
+					cancelCtx(messageRequest.RequestID)
 				}
 			}
 		}

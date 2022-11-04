@@ -36,6 +36,14 @@ type ObjectsRequest struct {
 	BucketName string `json:"bucket_name"`
 	Prefix     string `json:"prefix"`
 	Date       string `json:"date"`
+	RequestID  int64  `json:"request_id"`
+}
+
+type WSResponse struct {
+	RequestID  int64          `json:"request_id,nonempty"`
+	Error      string         `json:"error,omitempty"`
+	RequestEnd bool           `json:"request_end,omitempty"`
+	Data       ObjectResponse `json:"data,omitempty"`
 }
 
 type ObjectResponse struct {
@@ -43,10 +51,8 @@ type ObjectResponse struct {
 	LastModified string `json:"last_modified,nonempty"`
 	Size         int64  `json:"size,nonempty"`
 	VersionID    string `json:"version_id,nonempty"`
-	DeleteMarker bool   `json:"delete_flag,nonempty"`
-	IsLatest     bool   `json:"is_latest,nonempty"`
-	Error        string `json:"error"`
-	RequestEnd   bool   `json:"request_end"`
+	DeleteMarker bool   `json:"delete_flag,omitempty"`
+	IsLatest     bool   `json:"is_latest,omitempty"`
 }
 
 func getObjectsOptionsFromReq(request ObjectsRequest) (*objectsListOpts, error) {

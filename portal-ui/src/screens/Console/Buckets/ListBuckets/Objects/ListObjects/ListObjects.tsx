@@ -14,14 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
@@ -30,17 +23,10 @@ import { Button } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import Grid from "@mui/material/Grid";
 import get from "lodash/get";
-import { BucketObjectItem, WebsocketRequest } from "./types";
+import { BucketObjectItem, WebsocketRequest, WebsocketResponse } from "./types";
 import api from "../../../../../../common/api";
-import TableWrapper, {
-  ItemActions,
-} from "../../../../Common/TableWrapper/TableWrapper";
-import {
-  decodeURLString,
-  encodeURLString,
-  getClientOS,
-  niceBytesInt,
-} from "../../../../../../common/utils";
+import TableWrapper, { ItemActions } from "../../../../Common/TableWrapper/TableWrapper";
+import { decodeURLString, encodeURLString, getClientOS, niceBytesInt } from "../../../../../../common/utils";
 
 import {
   actionsTray,
@@ -48,43 +34,22 @@ import {
   objectBrowserCommon,
   objectBrowserExtras,
   searchField,
-  tableStyles,
+  tableStyles
 } from "../../../../Common/FormComponents/common/styleLibrary";
 import { Badge } from "@mui/material";
 import BrowserBreadcrumbs from "../../../../ObjectBrowser/BrowserBreadcrumbs";
-import {
-  download,
-  extensionPreview,
-  permissionItems,
-  sortListObjects,
-} from "../utils";
-import {
-  BucketInfo,
-  BucketObjectLocking,
-  BucketQuota,
-  BucketVersioning,
-} from "../../../types";
+import { download, extensionPreview, permissionItems, sortListObjects } from "../utils";
+import { BucketInfo, BucketObjectLocking, BucketQuota, BucketVersioning } from "../../../types";
 import { ErrorResponseHandler } from "../../../../../../common/types";
 
 import ScreenTitle from "../../../../Common/ScreenTitle/ScreenTitle";
 
 import { AppState, useAppDispatch } from "../../../../../../store";
 import PageLayout from "../../../../Common/Layout/PageLayout";
-import {
-  IAM_SCOPES,
-  permissionTooltipHelper,
-} from "../../../../../../common/SecureComponent/permissions";
-import {
-  hasPermission,
-  SecureComponent,
-} from "../../../../../../common/SecureComponent";
+import { IAM_SCOPES, permissionTooltipHelper } from "../../../../../../common/SecureComponent/permissions";
+import { hasPermission, SecureComponent } from "../../../../../../common/SecureComponent";
 import withSuspense from "../../../../Common/Components/withSuspense";
-import {
-  BucketsIcon,
-  DownloadIcon,
-  PreviewIcon,
-  ShareIcon,
-} from "../../../../../../icons";
+import { BucketsIcon, DownloadIcon, PreviewIcon, ShareIcon } from "../../../../../../icons";
 import UploadFilesButton from "../../UploadFilesButton";
 import DetailsListPanel from "./DetailsListPanel";
 import ObjectDetailPanel from "./ObjectDetailPanel";
@@ -93,16 +58,13 @@ import { listModeColumns, rewindModeColumns } from "./ListObjectsHelpers";
 import VersionsNavigator from "../ObjectDetails/VersionsNavigator";
 import CheckboxWrapper from "../../../../Common/FormComponents/CheckboxWrapper/CheckboxWrapper";
 
-import {
-  setErrorSnackMessage,
-  setSnackBarMessage,
-} from "../../../../../../systemSlice";
+import { setErrorSnackMessage, setSnackBarMessage } from "../../../../../../systemSlice";
 
 import {
   makeid,
   removeTrace,
   storeCallForObjectWithID,
-  storeFormDataWithID,
+  storeFormDataWithID
 } from "../../../../ObjectBrowser/transferManager";
 import {
   cancelObjectInList,
@@ -120,14 +82,14 @@ import {
   setShowDeletedObjects,
   setSimplePathHandler,
   setVersionsModeEnabled,
-  updateProgress,
+  updateProgress
 } from "../../../../ObjectBrowser/objectBrowserSlice";
 import makeStyles from "@mui/styles/makeStyles";
 import {
   selBucketDetailsInfo,
   selBucketDetailsLoading,
   setBucketDetailsLoad,
-  setBucketInfo,
+  setBucketInfo
 } from "../../../BucketDetails/bucketDetailsSlice";
 import RenameLongFileName from "../../../../ObjectBrowser/RenameLongFilename";
 import { selFeatures } from "../../../../consoleSlice";
@@ -163,22 +125,22 @@ const useStyles = makeStyles((theme: Theme) =>
       border: 0,
       height: "calc(100vh - 210px)",
       "&.isEmbedded": {
-        height: "calc(100vh - 315px)",
+        height: "calc(100vh - 315px)"
       },
       "&.actionsPanelOpen": {
-        minHeight: "100%",
+        minHeight: "100%"
       },
       "@media (max-width: 800px)": {
-        width: 800,
-      },
+        width: 800
+      }
     },
     "@global": {
       ".rowLine:hover  .iconFileElm": {
-        backgroundImage: "url(/images/ob_file_filled.svg)",
+        backgroundImage: "url(/images/ob_file_filled.svg)"
       },
       ".rowLine:hover  .iconFolderElm": {
-        backgroundImage: "url(/images/ob_folder_filled.svg)",
-      },
+        backgroundImage: "url(/images/ob_folder_filled.svg)"
+      }
     },
 
     badgeOverlap: {
@@ -187,14 +149,14 @@ const useStyles = makeStyles((theme: Theme) =>
         right: 1,
         width: 5,
         height: 5,
-        minWidth: 5,
-      },
+        minWidth: 5
+      }
     },
     screenTitle: {
       borderBottom: 0,
       paddingTop: 0,
       paddingLeft: 0,
-      paddingRight: 0,
+      paddingRight: 0
     },
     ...tableStyles,
     ...actionsTray,
@@ -202,37 +164,37 @@ const useStyles = makeStyles((theme: Theme) =>
 
     searchField: {
       ...searchField.searchField,
-      maxWidth: 380,
+      maxWidth: 380
     },
     screenTitleContainer: {
       border: "#EAEDEE 1px solid",
-      padding: "0.8rem 15px 0",
+      padding: "0.8rem 15px 0"
     },
     labelStyle: {
       color: "#969FA8",
-      fontSize: "12px",
+      fontSize: "12px"
     },
     breadcrumbsContainer: {
-      padding: "12px 14px 5px",
+      padding: "12px 14px 5px"
     },
     parentWrapper: {
       "@media (max-width: 800px)": {
-        overflowX: "auto",
-      },
+        overflowX: "auto"
+      }
     },
     fullContainer: {
       "@media (max-width: 799px)": {
-        width: 0,
-      },
+        width: 0
+      }
     },
     hideListOnSmall: {
       "@media (max-width: 799px)": {
-        display: "none",
-      },
+        display: "none"
+      }
     },
     ...objectBrowserExtras,
     ...objectBrowserCommon,
-    ...containerForHeader(theme.spacing(4)),
+    ...containerForHeader(theme.spacing(4))
   })
 );
 
@@ -240,22 +202,24 @@ const baseDnDStyle = {
   borderWidth: 2,
   borderRadius: 2,
   borderColor: "#eeeeee",
-  outline: "none",
+  outline: "none"
 };
 
 const activeDnDStyle = {
   borderStyle: "dashed",
   backgroundColor: "#fafafa",
-  borderColor: "#2196f3",
+  borderColor: "#2196f3"
 };
 
 const acceptDnDStyle = {
   borderStyle: "dashed",
   backgroundColor: "#fafafa",
-  borderColor: "#00e676",
+  borderColor: "#00e676"
 };
 
 var objectsWS: WebSocket;
+
+let currentRequestID: number = 0;
 
 const initWSConnection = (
   onMessageCallBack: (message: IMessageEvent) => void,
@@ -300,7 +264,8 @@ const initWSConnection = (
   };
 };
 
-initWSConnection(() => {});
+initWSConnection(() => {
+});
 
 const ListObjects = () => {
   const classes = useStyles();
@@ -362,9 +327,7 @@ const ListObjects = () => {
   const [selectedPreview, setSelectedPreview] =
     useState<BucketObjectItem | null>(null);
   const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
-  const [sortDirection, setSortDirection] = useState<
-    "ASC" | "DESC" | undefined
-  >("ASC");
+  const [sortDirection, setSortDirection] = useState<"ASC" | "DESC" | undefined>("ASC");
   const [currentSortField, setCurrentSortField] = useState<string>("name");
   const [iniLoad, setIniLoad] = useState<boolean>(false);
   const [canShareFile, setCanShareFile] = useState<boolean>(false);
@@ -382,25 +345,29 @@ const ListObjects = () => {
   const folderUpload = useRef<HTMLInputElement>(null);
 
   const displayDeleteObject = hasPermission(bucketName, [
-    IAM_SCOPES.S3_DELETE_OBJECT,
+    IAM_SCOPES.S3_DELETE_OBJECT
   ]);
 
   const displayListObjects = hasPermission(bucketName, [
-    IAM_SCOPES.S3_LIST_BUCKET,
+    IAM_SCOPES.S3_LIST_BUCKET
   ]);
 
   /*WS Request Handlers*/
-
   objectsWS.onmessage = (message: IMessageEvent) => {
-    const data: any = JSON.parse(message.data.toString());
+    const response: WebsocketResponse = JSON.parse(message.data.toString());
+
+    // If response is not from current request, we can omit
+    if (response.request_id !== currentRequestID) {
+      return;
+    }
 
     if (
-      data.error ===
+      response.error ===
       "The Access Key Id you provided does not exist in our records."
     ) {
       // Session expired.
       window.location.reload();
-    } else if (data.error === "Access Denied.") {
+    } else if (response.error === "Access Denied.") {
       let pathPrefix = "";
       if (internalPaths) {
         const decodedPath = decodeURLString(internalPaths);
@@ -418,8 +385,8 @@ const ListObjects = () => {
       if (!permitItems || permitItems.length === 0) {
         dispatch(
           setErrorSnackMessage({
-            errorMessage: data.error,
-            detailedError: data.error,
+            errorMessage: response.error,
+            detailedError: response.error
           })
         );
       } else {
@@ -430,14 +397,14 @@ const ListObjects = () => {
     dispatch(setLoadingObjectsList(false));
 
     // This indicates message request is reached
-    if (data.request_end) {
+    if (response.request_end) {
       dispatch(setLoadingObjectsList(false));
 
       return;
     }
 
     // We omit files from the same path
-    if (data.name !== decodeURLString(internalPaths)) {
+    if (response.data?.name !== decodeURLString(internalPaths)) {
       setRecords((prevStatus) => {
         let prSt: any[] = [];
 
@@ -445,19 +412,19 @@ const ListObjects = () => {
           prSt = [...prevStatus];
         }
 
-        const duplicate = prevStatus.findIndex((dup) => dup.name === data.name);
+        const duplicate = prevStatus.findIndex((dup) => dup.name === response.data?.name);
 
         // Element is duplicated, we verify if deleted flag is present
         if (duplicate >= 0) {
-          if (data.is_latest) {
-            prSt[duplicate].delete_flag = data.delete_flag || false;
-            prSt[duplicate].version_id = data.version_id;
-            prSt[duplicate].is_latest = data.is_latest;
+          if (response.data?.is_latest) {
+            prSt[duplicate].delete_flag = response.data.delete_flag || false;
+            prSt[duplicate].version_id = response.data.version_id;
+            prSt[duplicate].is_latest = response.data.is_latest;
           }
           return [...prSt];
         }
 
-        return [...prSt, ...[data]];
+        return [...prSt, ...[response.data]];
       });
     }
   };
@@ -465,14 +432,20 @@ const ListObjects = () => {
   const initWSRequest = useCallback(
     (path: string, date: Date) => {
       if (objectsWS && objectsWS.readyState === 1) {
+        const newRequestID = currentRequestID + 1;
+
         const request: WebsocketRequest = {
           bucket_name: bucketName,
           prefix: encodeURLString(path),
           mode: rewindEnabled || showDeleted ? "rewind" : "objects",
           date: date.toISOString(),
+          request_id: newRequestID
         };
 
         objectsWS.send(JSON.stringify(request));
+
+        // We store the new ID for the requestID
+        currentRequestID = newRequestID;
       } else {
         // Socket is disconnected, we request reconnection but will need to recreate call
         const dupRequest = () => {
@@ -539,7 +512,7 @@ const ListObjects = () => {
     internalPaths,
     rewindDate,
     rewindEnabled,
-    initWSRequest,
+    initWSRequest
   ]);
 
   // Common objects list
@@ -571,7 +544,7 @@ const ListObjects = () => {
     rewindDate,
     rewindEnabled,
     displayListObjects,
-    initWSRequest,
+    initWSRequest
   ]);
 
   useEffect(() => {
@@ -765,7 +738,7 @@ const ListObjects = () => {
         dispatch(
           updateProgress({
             instanceID: identityDownload,
-            progress: progress,
+            progress: progress
           })
         );
       },
@@ -792,7 +765,7 @@ const ListObjects = () => {
         waitingForFile: true,
         failed: false,
         cancelled: false,
-        errorMessage: "",
+        errorMessage: ""
       })
     );
   };
@@ -891,11 +864,11 @@ const ListObjects = () => {
             }.`;
 
             const errorMessages: any = {
-              413: "Error - File size too large",
+              413: "Error - File size too large"
             };
 
             xhr.withCredentials = false;
-            xhr.onload = function (event) {
+            xhr.onload = function(event) {
               // resolve promise only when HTTP code is ok
               if (xhr.status >= 200 && xhr.status < 300) {
                 dispatch(completeObject(identity));
@@ -918,7 +891,7 @@ const ListObjects = () => {
                 dispatch(
                   failObject({
                     instanceID: identity,
-                    msg: errorMessage,
+                    msg: errorMessage
                   })
                 );
                 reject({ status: xhr.status, message: errorMessage });
@@ -932,7 +905,7 @@ const ListObjects = () => {
               dispatch(
                 failObject({
                   instanceID: identity,
-                  msg: "A network error occurred.",
+                  msg: "A network error occurred."
                 })
               );
               return;
@@ -944,7 +917,7 @@ const ListObjects = () => {
               dispatch(
                 updateProgress({
                   instanceID: identity,
-                  progress: progress,
+                  progress: progress
                 })
               );
             });
@@ -954,7 +927,7 @@ const ListObjects = () => {
               dispatch(
                 failObject({
                   instanceID: identity,
-                  msg: "A network error occurred.",
+                  msg: "A network error occurred."
                 })
               );
               return;
@@ -984,7 +957,7 @@ const ListObjects = () => {
                   waitingForFile: false,
                   failed: false,
                   cancelled: false,
-                  errorMessage: "",
+                  errorMessage: ""
                 })
               );
 
@@ -1011,7 +984,7 @@ const ListObjects = () => {
               uploadFilePromises.length - errors.length;
             const err: ErrorResponseHandler = {
               errorMessage: "There were some errors during file upload",
-              detailedError: `Uploaded files ${successUploadedFiles}/${totalFiles}`,
+              detailedError: `Uploaded files ${successUploadedFiles}/${totalFiles}`
             };
             dispatch(setErrorSnackMessage(err));
           }
@@ -1039,7 +1012,7 @@ const ListObjects = () => {
             detailedError: permissionTooltipHelper(
               [IAM_SCOPES.S3_PUT_OBJECT],
               "upload objects to this location"
-            ),
+            )
           })
         );
       }
@@ -1051,14 +1024,14 @@ const ListObjects = () => {
   const { getRootProps, getInputProps, isDragActive, isDragAccept } =
     useDropzone({
       noClick: true,
-      onDrop,
+      onDrop
     });
 
   const dndStyles = useMemo(
     () => ({
       ...baseDnDStyle,
       ...(isDragActive ? activeDnDStyle : {}),
-      ...(isDragAccept ? acceptDnDStyle : {}),
+      ...(isDragAccept ? acceptDnDStyle : {})
     }),
     [isDragActive, isDragAccept]
   );
@@ -1208,15 +1181,15 @@ const ListObjects = () => {
 
   const canDownload = hasPermission(bucketName, [
     IAM_SCOPES.S3_GET_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT,
+    IAM_SCOPES.S3_STAR_OBJECT
   ]);
   const canDelete = hasPermission(bucketName, [
     IAM_SCOPES.S3_DELETE_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT,
+    IAM_SCOPES.S3_STAR_OBJECT
   ]);
   const canUpload = hasPermission(uploadPath, [
     IAM_SCOPES.S3_PUT_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT,
+    IAM_SCOPES.S3_STAR_OBJECT
   ]);
 
   const onClosePanel = (forceRefresh: boolean) => {
@@ -1263,8 +1236,8 @@ const ListObjects = () => {
       type: "view",
       label: "View",
       onClick: openPath,
-      sendOnlyId: true,
-    },
+      sendOnlyId: true
+    }
   ];
 
   const multiActionButtons = [
@@ -1276,23 +1249,23 @@ const ListObjects = () => {
       tooltip: canDownload
         ? "Download Selected"
         : permissionTooltipHelper(
-            [IAM_SCOPES.S3_GET_OBJECT],
-            "download objects from this bucket"
-          ),
+          [IAM_SCOPES.S3_GET_OBJECT],
+          "download objects from this bucket"
+        )
     },
     {
       action: openShare,
       label: "Share",
       disabled: selectedObjects.length !== 1 || !canShareFile,
       icon: <ShareIcon />,
-      tooltip: canShareFile ? "Share Selected File" : "Sharing unavailable",
+      tooltip: canShareFile ? "Share Selected File" : "Sharing unavailable"
     },
     {
       action: openPreview,
       label: "Preview",
       disabled: selectedObjects.length !== 1 || !canPreviewFile,
       icon: <PreviewIcon />,
-      tooltip: canPreviewFile ? "Preview Selected File" : "Preview unavailable",
+      tooltip: canPreviewFile ? "Preview Selected File" : "Preview unavailable"
     },
     {
       action: () => {
@@ -1305,10 +1278,10 @@ const ListObjects = () => {
       tooltip: canDelete
         ? "Delete Selected Files"
         : permissionTooltipHelper(
-            [IAM_SCOPES.S3_DELETE_OBJECT],
-            "delete objects in this bucket"
-          ),
-    },
+          [IAM_SCOPES.S3_DELETE_OBJECT],
+          "delete objects in this bucket"
+        )
+    }
   ];
 
   return (
@@ -1321,7 +1294,7 @@ const ListObjects = () => {
           dataObject={{
             name: selectedPreview.name,
             last_modified: "",
-            version_id: selectedPreview.version_id,
+            version_id: selectedPreview.version_id
           }}
         />
       )}
@@ -1360,7 +1333,7 @@ const ListObjects = () => {
             name: downloadRenameModal.name,
             last_modified: "",
             version_id: downloadRenameModal.version_id,
-            size: downloadRenameModal.size.toString(),
+            size: downloadRenameModal.size.toString()
           }}
         />
       )}
@@ -1431,7 +1404,7 @@ const ListObjects = () => {
                               minHeight: 16,
                               width: 16,
                               height: 16,
-                              marginTop: -3,
+                              marginTop: -3
                             }}
                           />
                         </Badge>
@@ -1456,12 +1429,13 @@ const ListObjects = () => {
                         if (versionsMode) {
                           dispatch(setLoadingVersions(true));
                         } else {
+                          setRecords([]);
                           dispatch(setLoadingObjectsList(true));
                         }
                       }}
                       disabled={
                         !hasPermission(bucketName, [
-                          IAM_SCOPES.S3_LIST_BUCKET,
+                          IAM_SCOPES.S3_LIST_BUCKET
                         ]) || rewindEnabled
                       }
                     />
@@ -1570,16 +1544,16 @@ const ListObjects = () => {
                     customEmptyMessage={
                       !loadingObjects && records.length === 0
                         ? `This location is empty${
-                            !rewindEnabled
-                              ? ", please try uploading a new file"
-                              : ""
-                          }`
+                          !rewindEnabled
+                            ? ", please try uploading a new file"
+                            : ""
+                        }`
                         : ""
                     }
                     sortConfig={{
                       currentSort: currentSortField,
                       currentDirection: sortDirection,
-                      triggerSort: sortChange,
+                      triggerSort: sortChange
                     }}
                     onSelectAll={selectAllItems}
                     rowStyle={({ index }) => {

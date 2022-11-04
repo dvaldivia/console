@@ -34,4 +34,20 @@ export interface WebsocketRequest {
   bucket_name: string;
   prefix: string;
   date: string;
+  request_id: number;
+}
+
+export interface WebsocketResponse {
+  request_id: number;
+  error?: string;
+  request_end?: boolean;
+  data?: ObjectResponse;
+}
+export interface ObjectResponse {
+  name: string;
+  last_modified: string;
+  size: number;
+  version_id: string;
+  delete_flag: boolean;
+  is_latest: boolean;
 }
