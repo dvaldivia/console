@@ -18,10 +18,11 @@ export interface BucketObjectItem {
   name: string;
   size: number;
   etag?: string;
-  last_modified: Date;
+  last_modified: string;
   content_type?: string;
   version_id: string;
   delete_flag?: boolean;
+  is_latest?: boolean;
 }
 
 export interface BucketObjectItemsList {
@@ -30,10 +31,10 @@ export interface BucketObjectItemsList {
 }
 
 export interface WebsocketRequest {
-  mode: "objects" | "rewind" | "close";
-  bucket_name: string;
-  prefix: string;
-  date: string;
+  mode: "objects" | "rewind" | "close" | "cancel";
+  bucket_name?: string;
+  prefix?: string;
+  date?: string;
   request_id: number;
 }
 
@@ -41,7 +42,7 @@ export interface WebsocketResponse {
   request_id: number;
   error?: string;
   request_end?: boolean;
-  data?: ObjectResponse;
+  data?: ObjectResponse[];
 }
 export interface ObjectResponse {
   name: string;

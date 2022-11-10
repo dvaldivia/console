@@ -477,7 +477,7 @@ const VersionsNavigator = ({
               objectToShare && objectToShare.size ? objectToShare.size : "0"
             ),
             content_type: "",
-            last_modified: new Date(actualInfo.last_modified),
+            last_modified: actualInfo.last_modified,
           }}
           onClosePreview={() => {
             setPreviewOpen(false);
@@ -514,7 +514,6 @@ const VersionsNavigator = ({
               <BrowserBreadcrumbs
                 bucketName={bucketName}
                 internalPaths={decodeURLString(internalPaths)}
-                existingFiles={[]}
                 hidePathButton={true}
               />
             </Grid>

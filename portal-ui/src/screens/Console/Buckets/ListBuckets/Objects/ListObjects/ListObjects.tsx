@@ -14,7 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
@@ -23,10 +30,12 @@ import { Button } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import Grid from "@mui/material/Grid";
 import get from "lodash/get";
-import { BucketObjectItem, WebsocketRequest, WebsocketResponse } from "./types";
 import api from "../../../../../../common/api";
-import TableWrapper, { ItemActions } from "../../../../Common/TableWrapper/TableWrapper";
-import { decodeURLString, encodeURLString, getClientOS, niceBytesInt } from "../../../../../../common/utils";
+import {
+  decodeURLString,
+  encodeURLString,
+  niceBytesInt,
+} from "../../../../../../common/utils";
 
 import {
   actionsTray,
@@ -34,68 +43,89 @@ import {
   objectBrowserCommon,
   objectBrowserExtras,
   searchField,
-  tableStyles
+  tableStyles,
 } from "../../../../Common/FormComponents/common/styleLibrary";
 import { Badge } from "@mui/material";
 import BrowserBreadcrumbs from "../../../../ObjectBrowser/BrowserBreadcrumbs";
-import { download, extensionPreview, permissionItems, sortListObjects } from "../utils";
-import { BucketInfo, BucketObjectLocking, BucketQuota, BucketVersioning } from "../../../types";
+import { extensionPreview } from "../utils";
+import { BucketInfo, BucketQuota } from "../../../types";
 import { ErrorResponseHandler } from "../../../../../../common/types";
 
 import ScreenTitle from "../../../../Common/ScreenTitle/ScreenTitle";
 
 import { AppState, useAppDispatch } from "../../../../../../store";
 import PageLayout from "../../../../Common/Layout/PageLayout";
-import { IAM_SCOPES, permissionTooltipHelper } from "../../../../../../common/SecureComponent/permissions";
-import { hasPermission, SecureComponent } from "../../../../../../common/SecureComponent";
+import {
+  IAM_SCOPES,
+  permissionTooltipHelper,
+} from "../../../../../../common/SecureComponent/permissions";
+import {
+  hasPermission,
+  SecureComponent,
+} from "../../../../../../common/SecureComponent";
 import withSuspense from "../../../../Common/Components/withSuspense";
-import { BucketsIcon, DownloadIcon, PreviewIcon, ShareIcon } from "../../../../../../icons";
+import {
+  BucketsIcon,
+  DownloadIcon,
+  PreviewIcon,
+  ShareIcon,
+} from "../../../../../../icons";
 import UploadFilesButton from "../../UploadFilesButton";
 import DetailsListPanel from "./DetailsListPanel";
 import ObjectDetailPanel from "./ObjectDetailPanel";
 import ActionsListSection from "./ActionsListSection";
-import { listModeColumns, rewindModeColumns } from "./ListObjectsHelpers";
 import VersionsNavigator from "../ObjectDetails/VersionsNavigator";
 import CheckboxWrapper from "../../../../Common/FormComponents/CheckboxWrapper/CheckboxWrapper";
 
-import { setErrorSnackMessage, setSnackBarMessage } from "../../../../../../systemSlice";
+import {
+  setErrorSnackMessage,
+  setSnackBarMessage,
+} from "../../../../../../systemSlice";
 
 import {
   makeid,
   removeTrace,
   storeCallForObjectWithID,
-  storeFormDataWithID
+  storeFormDataWithID,
 } from "../../../../ObjectBrowser/transferManager";
 import {
   cancelObjectInList,
   completeObject,
   failObject,
   openList,
+  resetMessages,
   resetRewind,
-  setLoadingObjectInfo,
+  setDownloadRenameModal,
   setLoadingObjectsList,
+  setLoadingRecords,
   setLoadingVersions,
   setNewObject,
   setObjectDetailsView,
+  setPreviewOpen,
   setSearchObjects,
+  setSelectedObjects,
   setSelectedObjectView,
+  setSelectedPreview,
+  setShareFileModalOpen,
   setShowDeletedObjects,
-  setSimplePathHandler,
   setVersionsModeEnabled,
-  updateProgress
+  updateProgress,
 } from "../../../../ObjectBrowser/objectBrowserSlice";
 import makeStyles from "@mui/styles/makeStyles";
 import {
   selBucketDetailsInfo,
   selBucketDetailsLoading,
   setBucketDetailsLoad,
-  setBucketInfo
+  setBucketInfo,
 } from "../../../BucketDetails/bucketDetailsSlice";
 import RenameLongFileName from "../../../../ObjectBrowser/RenameLongFilename";
-import { selFeatures } from "../../../../consoleSlice";
 import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
-import { wsProtocol } from "../../../../../../utils/wsUtils";
-import { IMessageEvent } from "websocket";
+import ListObjectsTable from "./ListObjectsTable";
+import {
+  downloadSelected,
+  openPreview,
+  openShare,
+} from "../../../../ObjectBrowser/objectBrowserThunks";
 
 const HistoryIcon = React.lazy(
   () => import("../../../../../../icons/HistoryIcon")
@@ -125,22 +155,22 @@ const useStyles = makeStyles((theme: Theme) =>
       border: 0,
       height: "calc(100vh - 210px)",
       "&.isEmbedded": {
-        height: "calc(100vh - 315px)"
+        height: "calc(100vh - 315px)",
       },
       "&.actionsPanelOpen": {
-        minHeight: "100%"
+        minHeight: "100%",
       },
       "@media (max-width: 800px)": {
-        width: 800
-      }
+        width: 800,
+      },
     },
     "@global": {
       ".rowLine:hover  .iconFileElm": {
-        backgroundImage: "url(/images/ob_file_filled.svg)"
+        backgroundImage: "url(/images/ob_file_filled.svg)",
       },
       ".rowLine:hover  .iconFolderElm": {
-        backgroundImage: "url(/images/ob_folder_filled.svg)"
-      }
+        backgroundImage: "url(/images/ob_folder_filled.svg)",
+      },
     },
 
     badgeOverlap: {
@@ -149,14 +179,14 @@ const useStyles = makeStyles((theme: Theme) =>
         right: 1,
         width: 5,
         height: 5,
-        minWidth: 5
-      }
+        minWidth: 5,
+      },
     },
     screenTitle: {
       borderBottom: 0,
       paddingTop: 0,
       paddingLeft: 0,
-      paddingRight: 0
+      paddingRight: 0,
     },
     ...tableStyles,
     ...actionsTray,
@@ -164,37 +194,37 @@ const useStyles = makeStyles((theme: Theme) =>
 
     searchField: {
       ...searchField.searchField,
-      maxWidth: 380
+      maxWidth: 380,
     },
     screenTitleContainer: {
       border: "#EAEDEE 1px solid",
-      padding: "0.8rem 15px 0"
+      padding: "0.8rem 15px 0",
     },
     labelStyle: {
       color: "#969FA8",
-      fontSize: "12px"
+      fontSize: "12px",
     },
     breadcrumbsContainer: {
-      padding: "12px 14px 5px"
+      padding: "12px 14px 5px",
     },
     parentWrapper: {
       "@media (max-width: 800px)": {
-        overflowX: "auto"
-      }
+        overflowX: "auto",
+      },
     },
     fullContainer: {
       "@media (max-width: 799px)": {
-        width: 0
-      }
+        width: 0,
+      },
     },
     hideListOnSmall: {
       "@media (max-width: 799px)": {
-        display: "none"
-      }
+        display: "none",
+      },
     },
     ...objectBrowserExtras,
     ...objectBrowserCommon,
-    ...containerForHeader(theme.spacing(4))
+    ...containerForHeader(theme.spacing(4)),
   })
 );
 
@@ -202,70 +232,20 @@ const baseDnDStyle = {
   borderWidth: 2,
   borderRadius: 2,
   borderColor: "#eeeeee",
-  outline: "none"
+  outline: "none",
 };
 
 const activeDnDStyle = {
   borderStyle: "dashed",
   backgroundColor: "#fafafa",
-  borderColor: "#2196f3"
+  borderColor: "#2196f3",
 };
 
 const acceptDnDStyle = {
   borderStyle: "dashed",
   backgroundColor: "#fafafa",
-  borderColor: "#00e676"
+  borderColor: "#00e676",
 };
-
-var objectsWS: WebSocket;
-
-let currentRequestID: number = 0;
-
-const initWSConnection = (
-  onMessageCallBack: (message: IMessageEvent) => void,
-  openCallBack?: () => void
-) => {
-  const url = new URL(window.location.toString());
-  const isDev = process.env.NODE_ENV === "development";
-  const port = isDev ? "9090" : url.port;
-
-  // check if we are using base path, if not this always is `/`
-  const baseLocation = new URL(document.baseURI);
-  const baseUrl = baseLocation.pathname;
-
-  const wsProt = wsProtocol(url.protocol);
-
-  objectsWS = new WebSocket(
-    `${wsProt}://${url.hostname}:${port}${baseUrl}ws/objectManager`
-  );
-
-  objectsWS.onopen = () => {
-    if (openCallBack) {
-      openCallBack();
-    }
-  };
-
-  const reconnectFn = () => {
-    initWSConnection(onMessageCallBack, openCallBack);
-  };
-
-  objectsWS.onclose = () => {
-    console.info("Websocket Disconnected. Attempting Reconnection...");
-
-    // We reconnect after 3 seconds
-    setTimeout(reconnectFn, 3000);
-  };
-
-  objectsWS.onerror = () => {
-    console.error("Error in websocket connection. Attempting connection...");
-
-    // We reconnect after 3 seconds
-    setTimeout(reconnectFn, 3000);
-  };
-};
-
-initWSConnection(() => {
-});
 
 const ListObjects = () => {
   const classes = useStyles();
@@ -277,9 +257,6 @@ const ListObjects = () => {
   const rewindEnabled = useSelector(
     (state: AppState) => state.objectBrowser.rewind.rewindEnabled
   );
-  const rewindDate = useSelector(
-    (state: AppState) => state.objectBrowser.rewind.dateToRewind
-  );
   const bucketToRewind = useSelector(
     (state: AppState) => state.objectBrowser.rewind.bucketToRewind
   );
@@ -287,9 +264,6 @@ const ListObjects = () => {
     (state: AppState) => state.objectBrowser.versionsMode
   );
 
-  const searchObjects = useSelector(
-    (state: AppState) => state.objectBrowser.searchObjects
-  );
   const showDeleted = useSelector(
     (state: AppState) => state.objectBrowser.showDeleted
   );
@@ -306,35 +280,41 @@ const ListObjects = () => {
     (state: AppState) => state.objectBrowser.simplePath
   );
 
-  const loadingBucket = useSelector(selBucketDetailsLoading);
-  const bucketInfo = useSelector(selBucketDetailsInfo);
-  const allowResources = useSelector(
-    (state: AppState) => state.console.session.allowResources
+  const isVersioned = useSelector(
+    (state: AppState) => state.objectBrowser.isVersioned
+  );
+  const lockingEnabled = useSelector(
+    (state: AppState) => state.objectBrowser.lockingEnabled
+  );
+  const downloadRenameModal = useSelector(
+    (state: AppState) => state.objectBrowser.downloadRenameModal
+  );
+  const selectedPreview = useSelector(
+    (state: AppState) => state.objectBrowser.selectedPreview
+  );
+  const shareFileModalOpen = useSelector(
+    (state: AppState) => state.objectBrowser.shareFileModalOpen
+  );
+  const previewOpen = useSelector(
+    (state: AppState) => state.objectBrowser.previewOpen
   );
 
-  const features = useSelector(selFeatures);
-  const obOnly = !!features?.includes("object-browser-only");
+  const loadingBucket = useSelector(selBucketDetailsLoading);
+  const bucketInfo = useSelector(selBucketDetailsInfo);
 
-  const [records, setRecords] = useState<BucketObjectItem[]>([]);
   const [deleteMultipleOpen, setDeleteMultipleOpen] = useState<boolean>(false);
-  const [loadingVersioning, setLoadingVersioning] = useState<boolean>(true);
-  const [isVersioned, setIsVersioned] = useState<boolean>(false);
-  const [loadingLocking, setLoadingLocking] = useState<boolean>(true);
-  const [lockingEnabled, setLockingEnabled] = useState<boolean>(false);
   const [rewindSelect, setRewindSelect] = useState<boolean>(false);
-  const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
-  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-  const [selectedPreview, setSelectedPreview] =
-    useState<BucketObjectItem | null>(null);
-  const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
-  const [sortDirection, setSortDirection] = useState<"ASC" | "DESC" | undefined>("ASC");
-  const [currentSortField, setCurrentSortField] = useState<string>("name");
+  // const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+  // const [selectedPreview, setSelectedPreview] =
+  //   useState<BucketObjectItem | null>(null);
+  // const [shareFileModalOpen, setShareFileModalOpen] = useState<boolean>(false);
+
   const [iniLoad, setIniLoad] = useState<boolean>(false);
   const [canShareFile, setCanShareFile] = useState<boolean>(false);
   const [canPreviewFile, setCanPreviewFile] = useState<boolean>(false);
   const [quota, setQuota] = useState<BucketQuota | null>(null);
-  const [downloadRenameModal, setDownloadRenameModal] =
-    useState<BucketObjectItem | null>(null);
+  // const [downloadRenameModal, setDownloadRenameModal] =
+  //   useState<BucketObjectItem | null>(null);
 
   const pathSegment = location.pathname.split("/browse/");
 
@@ -345,207 +325,17 @@ const ListObjects = () => {
   const folderUpload = useRef<HTMLInputElement>(null);
 
   const displayDeleteObject = hasPermission(bucketName, [
-    IAM_SCOPES.S3_DELETE_OBJECT
+    IAM_SCOPES.S3_DELETE_OBJECT,
   ]);
-
-  const displayListObjects = hasPermission(bucketName, [
-    IAM_SCOPES.S3_LIST_BUCKET
-  ]);
-
-  /*WS Request Handlers*/
-  objectsWS.onmessage = (message: IMessageEvent) => {
-    const response: WebsocketResponse = JSON.parse(message.data.toString());
-
-    // If response is not from current request, we can omit
-    if (response.request_id !== currentRequestID) {
-      return;
-    }
-
-    if (
-      response.error ===
-      "The Access Key Id you provided does not exist in our records."
-    ) {
-      // Session expired.
-      window.location.reload();
-    } else if (response.error === "Access Denied.") {
-      let pathPrefix = "";
-      if (internalPaths) {
-        const decodedPath = decodeURLString(internalPaths);
-        pathPrefix = decodedPath.endsWith("/")
-          ? decodedPath
-          : decodedPath + "/";
-      }
-
-      const permitItems = permissionItems(
-        bucketName,
-        pathPrefix,
-        allowResources || []
-      );
-
-      if (!permitItems || permitItems.length === 0) {
-        dispatch(
-          setErrorSnackMessage({
-            errorMessage: response.error,
-            detailedError: response.error
-          })
-        );
-      } else {
-        setRecords(permitItems);
-      }
-    }
-    // reset start status
-    dispatch(setLoadingObjectsList(false));
-
-    // This indicates message request is reached
-    if (response.request_end) {
-      dispatch(setLoadingObjectsList(false));
-
-      return;
-    }
-
-    // We omit files from the same path
-    if (response.data?.name !== decodeURLString(internalPaths)) {
-      setRecords((prevStatus) => {
-        let prSt: any[] = [];
-
-        if (prevStatus) {
-          prSt = [...prevStatus];
-        }
-
-        const duplicate = prevStatus.findIndex((dup) => dup.name === response.data?.name);
-
-        // Element is duplicated, we verify if deleted flag is present
-        if (duplicate >= 0) {
-          if (response.data?.is_latest) {
-            prSt[duplicate].delete_flag = response.data.delete_flag || false;
-            prSt[duplicate].version_id = response.data.version_id;
-            prSt[duplicate].is_latest = response.data.is_latest;
-          }
-          return [...prSt];
-        }
-
-        return [...prSt, ...[response.data]];
-      });
-    }
-  };
-
-  const initWSRequest = useCallback(
-    (path: string, date: Date) => {
-      if (objectsWS && objectsWS.readyState === 1) {
-        const newRequestID = currentRequestID + 1;
-
-        const request: WebsocketRequest = {
-          bucket_name: bucketName,
-          prefix: encodeURLString(path),
-          mode: rewindEnabled || showDeleted ? "rewind" : "objects",
-          date: date.toISOString(),
-          request_id: newRequestID
-        };
-
-        objectsWS.send(JSON.stringify(request));
-
-        // We store the new ID for the requestID
-        currentRequestID = newRequestID;
-      } else {
-        // Socket is disconnected, we request reconnection but will need to recreate call
-        const dupRequest = () => {
-          initWSRequest(path, date);
-        };
-
-        initWSConnection(dupRequest);
-      }
-    },
-    [bucketName, rewindEnabled, showDeleted]
+  const selectedObjects = useSelector(
+    (state: AppState) => state.objectBrowser.selectedObjects
   );
-
-  useEffect(() => {
-    if (objectsWS?.readyState === 1) {
-      const decodedIPaths = decodeURLString(internalPaths);
-
-      if (decodedIPaths.endsWith("/") || decodedIPaths === "") {
-        setRecords([]);
-        dispatch(setObjectDetailsView(false));
-        dispatch(setSelectedObjectView(null));
-        dispatch(
-          setSimplePathHandler(decodedIPaths === "" ? "/" : decodedIPaths)
-        );
-      } else {
-        dispatch(setLoadingObjectInfo(true));
-        dispatch(setObjectDetailsView(true));
-        dispatch(setLoadingVersions(true));
-        dispatch(
-          setSelectedObjectView(
-            `${decodedIPaths ? `${encodeURLString(decodedIPaths)}` : ``}`
-          )
-        );
-        dispatch(
-          setSimplePathHandler(
-            `${decodedIPaths.split("/").slice(0, -1).join("/")}/`
-          )
-        );
-      }
-    }
-  }, [internalPaths, rewindDate, rewindEnabled, dispatch]);
 
   useEffect(() => {
     dispatch(setSearchObjects(""));
     dispatch(setLoadingObjectsList(true));
-    setSelectedObjects([]);
-  }, [simplePath, dispatch, setSelectedObjects]);
-
-  // Direct file access effect / prefix
-  useEffect(() => {
-    if (!loadingObjects && records.length === 0 && !rewindEnabled) {
-      const parentPath = `${decodeURLString(internalPaths)
-        .split("/")
-        .slice(0, -1)
-        .join("/")}/`;
-
-      initWSRequest(parentPath, new Date());
-    }
-  }, [
-    loadingObjects,
-    records,
-    bucketName,
-    bucketToRewind,
-    dispatch,
-    internalPaths,
-    rewindDate,
-    rewindEnabled,
-    initWSRequest
-  ]);
-
-  // Common objects list
-  useEffect(() => {
-    // begin watch if bucketName in bucketList and start pressed
-    if (loadingObjects && displayListObjects) {
-      let pathPrefix = "";
-      if (internalPaths) {
-        const decodedPath = decodeURLString(internalPaths);
-        pathPrefix = decodedPath.endsWith("/")
-          ? decodedPath
-          : decodedPath + "/";
-      }
-
-      let requestDate = new Date();
-
-      if (rewindEnabled && rewindDate) {
-        requestDate = rewindDate;
-      }
-
-      initWSRequest(pathPrefix, requestDate);
-    } else {
-      dispatch(setLoadingObjectsList(false));
-    }
-  }, [
-    loadingObjects,
-    internalPaths,
-    dispatch,
-    rewindDate,
-    rewindEnabled,
-    displayListObjects,
-    initWSRequest
-  ]);
+    dispatch(setSelectedObjects([]));
+  }, [simplePath, dispatch]);
 
   useEffect(() => {
     if (rewindEnabled) {
@@ -628,52 +418,6 @@ const ListObjects = () => {
     }
   }, [iniLoad, dispatch, setIniLoad]);
 
-  useEffect(() => {
-    if (loadingVersioning) {
-      if (displayListObjects) {
-        api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/versioning`)
-          .then((res: BucketVersioning) => {
-            setIsVersioned(res.is_versioned);
-            setLoadingVersioning(false);
-          })
-          .catch((err: ErrorResponseHandler) => {
-            console.error(
-              "Error Getting Object Versioning Status: ",
-              err.detailedError
-            );
-            setLoadingVersioning(false);
-          });
-      } else {
-        setLoadingVersioning(false);
-        setRecords([]);
-      }
-    }
-  }, [bucketName, loadingVersioning, dispatch, displayListObjects]);
-
-  useEffect(() => {
-    if (loadingLocking) {
-      if (displayListObjects) {
-        api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/object-locking`)
-          .then((res: BucketObjectLocking) => {
-            setLockingEnabled(res.object_locking_enabled);
-            setLoadingLocking(false);
-          })
-          .catch((err: ErrorResponseHandler) => {
-            console.error(
-              "Error Getting Object Locking Status: ",
-              err.detailedError
-            );
-            setLoadingLocking(false);
-          });
-      } else {
-        setRecords([]);
-        setLoadingLocking(false);
-      }
-    }
-  }, [bucketName, loadingLocking, dispatch, displayListObjects]);
-
   // bucket info
   useEffect(() => {
     if (loadingBucket) {
@@ -695,7 +439,7 @@ const ListObjects = () => {
 
     if (refresh) {
       dispatch(setSnackBarMessage(`Objects deleted successfully.`));
-      setSelectedObjects([]);
+      dispatch(setSelectedObjects([]));
       dispatch(setLoadingObjectsList(true));
     }
   };
@@ -718,73 +462,6 @@ const ListObjects = () => {
     uploadObject(newFiles, "");
 
     e.target.value = "";
-  };
-
-  const downloadObject = (object: BucketObjectItem) => {
-    const identityDownload = encodeURLString(
-      `${bucketName}-${object.name}-${new Date().getTime()}-${Math.random()}`
-    );
-
-    const ID = makeid(8);
-
-    const downloadCall = download(
-      bucketName,
-      encodeURLString(object.name),
-      object.version_id,
-      object.size,
-      null,
-      ID,
-      (progress) => {
-        dispatch(
-          updateProgress({
-            instanceID: identityDownload,
-            progress: progress
-          })
-        );
-      },
-      () => {
-        dispatch(completeObject(identityDownload));
-      },
-      (msg: string) => {
-        dispatch(failObject({ instanceID: identityDownload, msg }));
-      },
-      () => {
-        dispatch(cancelObjectInList(identityDownload));
-      }
-    );
-    storeCallForObjectWithID(ID, downloadCall);
-    dispatch(
-      setNewObject({
-        ID,
-        bucketName,
-        done: false,
-        instanceID: identityDownload,
-        percentage: 0,
-        prefix: object.name,
-        type: "download",
-        waitingForFile: true,
-        failed: false,
-        cancelled: false,
-        errorMessage: ""
-      })
-    );
-  };
-
-  const openPath = (idElement: string) => {
-    setSelectedObjects([]);
-
-    const newPath = `/buckets/${bucketName}/browse${
-      idElement ? `/${encodeURLString(idElement)}` : ``
-    }`;
-    navigate(newPath);
-
-    dispatch(setObjectDetailsView(true));
-    dispatch(setLoadingVersions(true));
-    dispatch(
-      setSelectedObjectView(
-        `${idElement ? `${encodeURLString(idElement)}` : ``}`
-      )
-    );
   };
 
   const uploadObject = useCallback(
@@ -864,11 +541,11 @@ const ListObjects = () => {
             }.`;
 
             const errorMessages: any = {
-              413: "Error - File size too large"
+              413: "Error - File size too large",
             };
 
             xhr.withCredentials = false;
-            xhr.onload = function(event) {
+            xhr.onload = function (event) {
               // resolve promise only when HTTP code is ok
               if (xhr.status >= 200 && xhr.status < 300) {
                 dispatch(completeObject(identity));
@@ -891,7 +568,7 @@ const ListObjects = () => {
                 dispatch(
                   failObject({
                     instanceID: identity,
-                    msg: errorMessage
+                    msg: errorMessage,
                   })
                 );
                 reject({ status: xhr.status, message: errorMessage });
@@ -905,7 +582,7 @@ const ListObjects = () => {
               dispatch(
                 failObject({
                   instanceID: identity,
-                  msg: "A network error occurred."
+                  msg: "A network error occurred.",
                 })
               );
               return;
@@ -917,7 +594,7 @@ const ListObjects = () => {
               dispatch(
                 updateProgress({
                   instanceID: identity,
-                  progress: progress
+                  progress: progress,
                 })
               );
             });
@@ -927,7 +604,7 @@ const ListObjects = () => {
               dispatch(
                 failObject({
                   instanceID: identity,
-                  msg: "A network error occurred."
+                  msg: "A network error occurred.",
                 })
               );
               return;
@@ -957,7 +634,7 @@ const ListObjects = () => {
                   waitingForFile: false,
                   failed: false,
                   cancelled: false,
-                  errorMessage: ""
+                  errorMessage: "",
                 })
               );
 
@@ -984,13 +661,13 @@ const ListObjects = () => {
               uploadFilePromises.length - errors.length;
             const err: ErrorResponseHandler = {
               errorMessage: "There were some errors during file upload",
-              detailedError: `Uploaded files ${successUploadedFiles}/${totalFiles}`
+              detailedError: `Uploaded files ${successUploadedFiles}/${totalFiles}`,
             };
             dispatch(setErrorSnackMessage(err));
           }
           // We force objects list reload after all promises were handled
           dispatch(setLoadingObjectsList(true));
-          setSelectedObjects([]);
+          dispatch(setSelectedObjects([]));
         });
       };
 
@@ -1012,7 +689,7 @@ const ListObjects = () => {
             detailedError: permissionTooltipHelper(
               [IAM_SCOPES.S3_PUT_OBJECT],
               "upload objects to this location"
-            )
+            ),
           })
         );
       }
@@ -1024,156 +701,36 @@ const ListObjects = () => {
   const { getRootProps, getInputProps, isDragActive, isDragAccept } =
     useDropzone({
       noClick: true,
-      onDrop
+      onDrop,
     });
 
   const dndStyles = useMemo(
     () => ({
       ...baseDnDStyle,
       ...(isDragActive ? activeDnDStyle : {}),
-      ...(isDragAccept ? acceptDnDStyle : {})
+      ...(isDragAccept ? acceptDnDStyle : {}),
     }),
     [isDragActive, isDragAccept]
   );
 
-  const openPreview = () => {
-    if (selectedObjects.length === 1) {
-      let fileObject: BucketObjectItem | undefined;
-
-      const findFunction = (currValue: BucketObjectItem) =>
-        selectedObjects.includes(currValue.name);
-
-      fileObject = filteredRecords.find(findFunction);
-
-      if (fileObject) {
-        setSelectedPreview(fileObject);
-        setPreviewOpen(true);
-      }
-    }
-  };
-
-  const openShare = () => {
-    if (selectedObjects.length === 1) {
-      let fileObject: BucketObjectItem | undefined;
-
-      const findFunction = (currValue: BucketObjectItem) =>
-        selectedObjects.includes(currValue.name);
-
-      fileObject = filteredRecords.find(findFunction);
-
-      if (fileObject) {
-        setSelectedPreview(fileObject);
-        setShareFileModalOpen(true);
-      }
-    }
-  };
-
   const closeShareModal = () => {
-    setShareFileModalOpen(false);
-    setSelectedPreview(null);
+    dispatch(setShareFileModalOpen(false));
+    dispatch(setSelectedPreview(null));
   };
-
-  const filteredRecords = records.filter((b: BucketObjectItem) => {
-    if (searchObjects === "") {
-      return true;
-    } else {
-      const objectName = b.name.toLowerCase();
-      if (objectName.indexOf(searchObjects.toLowerCase()) >= 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  });
 
   const rewindCloseModal = () => {
     setRewindSelect(false);
   };
 
   const closePreviewWindow = () => {
-    setPreviewOpen(false);
-    setSelectedPreview(null);
-  };
-
-  const selectListObjects = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const targetD = e.target;
-    const value = targetD.value;
-    const checked = targetD.checked;
-
-    let elements: string[] = [...selectedObjects]; // We clone the selectedBuckets array
-
-    if (checked) {
-      // If the user has checked this field we need to push this to selectedBucketsList
-      elements.push(value);
-    } else {
-      // User has unchecked this field, we need to remove it from the list
-      elements = elements.filter((element) => element !== value);
-    }
-    setSelectedObjects(elements);
-    dispatch(setSelectedObjectView(null));
-
-    return elements;
-  };
-
-  const sortChange = (sortData: any) => {
-    const newSortDirection = get(sortData, "sortDirection", "DESC");
-    setCurrentSortField(sortData.sortBy);
-    setSortDirection(newSortDirection);
-    dispatch(setLoadingObjectsList(true));
+    dispatch(setPreviewOpen(false));
+    dispatch(setSelectedPreview(null));
   };
 
   const pageTitle = decodeURLString(internalPaths);
   const currentPath = pageTitle.split("/").filter((i: string) => i !== "");
 
-  const plSelect = filteredRecords;
-  const sortASC = plSelect.sort(sortListObjects(currentSortField));
-
-  let payload: BucketObjectItem[] = [];
-
-  if (sortDirection === "ASC") {
-    payload = sortASC;
-  } else {
-    payload = sortASC.reverse();
-  }
-
-  const selectAllItems = () => {
-    dispatch(setSelectedObjectView(null));
-
-    if (selectedObjects.length === payload.length) {
-      setSelectedObjects([]);
-      return;
-    }
-
-    const elements = payload.map((item) => item.name);
-    setSelectedObjects(elements);
-  };
-
-  const downloadSelected = () => {
-    if (selectedObjects.length !== 0) {
-      let itemsToDownload: BucketObjectItem[] = [];
-
-      const filterFunction = (currValue: BucketObjectItem) =>
-        selectedObjects.includes(currValue.name);
-
-      itemsToDownload = filteredRecords.filter(filterFunction);
-
-      // I case just one element is selected, then we trigger download modal validation.
-      // We are going to enforce zip download when multiple files are selected
-      if (itemsToDownload.length === 1) {
-        if (
-          itemsToDownload[0].name.length > 200 &&
-          getClientOS().toLowerCase().includes("win")
-        ) {
-          setDownloadRenameModal(itemsToDownload[0]);
-          return;
-        }
-      }
-
-      itemsToDownload.forEach((filteredItem) => {
-        downloadObject(filteredItem);
-      });
-    }
-  };
+  // const down
   let uploadPath = [bucketName];
   if (currentPath.length > 0) {
     uploadPath = uploadPath.concat(currentPath);
@@ -1181,15 +738,15 @@ const ListObjects = () => {
 
   const canDownload = hasPermission(bucketName, [
     IAM_SCOPES.S3_GET_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT
+    IAM_SCOPES.S3_STAR_OBJECT,
   ]);
   const canDelete = hasPermission(bucketName, [
     IAM_SCOPES.S3_DELETE_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT
+    IAM_SCOPES.S3_STAR_OBJECT,
   ]);
   const canUpload = hasPermission(uploadPath, [
     IAM_SCOPES.S3_PUT_OBJECT,
-    IAM_SCOPES.S3_STAR_OBJECT
+    IAM_SCOPES.S3_STAR_OBJECT,
   ]);
 
   const onClosePanel = (forceRefresh: boolean) => {
@@ -1214,7 +771,7 @@ const ListObjects = () => {
     }
 
     dispatch(setObjectDetailsView(false));
-    setSelectedObjects([]);
+    dispatch(setSelectedObjects([]));
 
     if (forceRefresh) {
       dispatch(setLoadingObjectsList(true));
@@ -1222,50 +779,47 @@ const ListObjects = () => {
   };
 
   const setDeletedAction = () => {
-    setRecords([]);
+    dispatch(resetMessages());
     dispatch(setShowDeletedObjects(!showDeleted));
     onClosePanel(true);
   };
 
   const closeRenameModal = () => {
-    setDownloadRenameModal(null);
+    dispatch(setDownloadRenameModal(null));
   };
-
-  const tableActions: ItemActions[] = [
-    {
-      type: "view",
-      label: "View",
-      onClick: openPath,
-      sendOnlyId: true
-    }
-  ];
 
   const multiActionButtons = [
     {
-      action: downloadSelected,
+      action: () => {
+        dispatch(downloadSelected(bucketName));
+      },
       label: "Download",
       disabled: !canDownload || selectedObjects.length === 0,
       icon: <DownloadIcon />,
       tooltip: canDownload
         ? "Download Selected"
         : permissionTooltipHelper(
-          [IAM_SCOPES.S3_GET_OBJECT],
-          "download objects from this bucket"
-        )
+            [IAM_SCOPES.S3_GET_OBJECT],
+            "download objects from this bucket"
+          ),
     },
     {
-      action: openShare,
+      action: () => {
+        dispatch(openShare());
+      },
       label: "Share",
       disabled: selectedObjects.length !== 1 || !canShareFile,
       icon: <ShareIcon />,
-      tooltip: canShareFile ? "Share Selected File" : "Sharing unavailable"
+      tooltip: canShareFile ? "Share Selected File" : "Sharing unavailable",
     },
     {
-      action: openPreview,
+      action: () => {
+        dispatch(openPreview());
+      },
       label: "Preview",
       disabled: selectedObjects.length !== 1 || !canPreviewFile,
       icon: <PreviewIcon />,
-      tooltip: canPreviewFile ? "Preview Selected File" : "Preview unavailable"
+      tooltip: canPreviewFile ? "Preview Selected File" : "Preview unavailable",
     },
     {
       action: () => {
@@ -1278,10 +832,10 @@ const ListObjects = () => {
       tooltip: canDelete
         ? "Delete Selected Files"
         : permissionTooltipHelper(
-          [IAM_SCOPES.S3_DELETE_OBJECT],
-          "delete objects in this bucket"
-        )
-    }
+            [IAM_SCOPES.S3_DELETE_OBJECT],
+            "delete objects in this bucket"
+          ),
+    },
   ];
 
   return (
@@ -1294,7 +848,7 @@ const ListObjects = () => {
           dataObject={{
             name: selectedPreview.name,
             last_modified: "",
-            version_id: selectedPreview.version_id
+            version_id: selectedPreview.version_id,
           }}
         />
       )}
@@ -1333,7 +887,7 @@ const ListObjects = () => {
             name: downloadRenameModal.name,
             last_modified: "",
             version_id: downloadRenameModal.version_id,
-            size: downloadRenameModal.size.toString()
+            size: downloadRenameModal.size.toString(),
           }}
         />
       )}
@@ -1404,7 +958,7 @@ const ListObjects = () => {
                               minHeight: 16,
                               width: 16,
                               height: 16,
-                              marginTop: -3
+                              marginTop: -3,
                             }}
                           />
                         </Badge>
@@ -1429,13 +983,14 @@ const ListObjects = () => {
                         if (versionsMode) {
                           dispatch(setLoadingVersions(true));
                         } else {
-                          setRecords([]);
+                          dispatch(resetMessages());
+                          dispatch(setLoadingRecords(true));
                           dispatch(setLoadingObjectsList(true));
                         }
                       }}
                       disabled={
                         !hasPermission(bucketName, [
-                          IAM_SCOPES.S3_LIST_BUCKET
+                          IAM_SCOPES.S3_LIST_BUCKET,
                         ]) || rewindEnabled
                       }
                     />
@@ -1506,7 +1061,6 @@ const ListObjects = () => {
                     <BrowserBreadcrumbs
                       bucketName={bucketName}
                       internalPaths={pageTitle}
-                      existingFiles={records || []}
                       additionalOptions={
                         !isVersioned || rewindEnabled ? null : (
                           <div>
@@ -1527,44 +1081,7 @@ const ListObjects = () => {
                       hidePathButton={false}
                     />
                   </Grid>
-                  <TableWrapper
-                    itemActions={tableActions}
-                    columns={
-                      rewindEnabled ? rewindModeColumns : listModeColumns
-                    }
-                    isLoading={loadingObjects && records.length === 0}
-                    entityName="Objects"
-                    idField="name"
-                    records={payload}
-                    customPaperHeight={`${classes.browsePaper} ${
-                      obOnly ? "isEmbedded" : ""
-                    } ${detailsOpen ? "actionsPanelOpen" : ""}`}
-                    selectedItems={selectedObjects}
-                    onSelect={selectListObjects}
-                    customEmptyMessage={
-                      !loadingObjects && records.length === 0
-                        ? `This location is empty${
-                          !rewindEnabled
-                            ? ", please try uploading a new file"
-                            : ""
-                        }`
-                        : ""
-                    }
-                    sortConfig={{
-                      currentSort: currentSortField,
-                      currentDirection: sortDirection,
-                      triggerSort: sortChange
-                    }}
-                    onSelectAll={selectAllItems}
-                    rowStyle={({ index }) => {
-                      if (payload[index]?.delete_flag) {
-                        return "deleted";
-                      }
-
-                      return "";
-                    }}
-                    parentClassName={classes.parentWrapper}
-                  />
+                  <ListObjectsTable />
                 </Grid>
               </SecureComponent>
             )}

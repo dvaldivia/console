@@ -16,6 +16,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IFileItem, ObjectBrowserState } from "./types";
+import { BucketObjectItem } from "../Buckets/ListBuckets/Objects/ListObjects/types";
 
 const defaultRewind = {
   rewindEnabled: false,
@@ -47,6 +48,19 @@ const initialState: ObjectBrowserState = {
   showDeleted: false,
   selectedInternalPaths: null,
   simplePath: null,
+  // object browser
+  records: [],
+  recordsByName: [],
+  loadRecords: true,
+  loadingVersioning: true,
+  isVersioned: false,
+  lockingEnabled: false,
+  loadingLocking: false,
+  selectedObjects: [],
+  downloadRenameModal: null,
+  selectedPreview: null,
+  previewOpen: false,
+  shareFileModalOpen: false,
 };
 
 export const objectBrowserSlice = createSlice({
@@ -259,6 +273,58 @@ export const objectBrowserSlice = createSlice({
         action.payload,
       ];
     },
+    setRecords: (state, action: PayloadAction<BucketObjectItem[]>) => {
+      state.records = action.payload;
+    },
+    setLoadingVersioning: (state, action: PayloadAction<boolean>) => {
+      state.loadingVersioning = action.payload;
+    },
+    setIsVersioned: (state, action: PayloadAction<boolean>) => {
+      state.isVersioned = action.payload;
+    },
+    setLockingEnabled: (state, action: PayloadAction<boolean>) => {
+      state.lockingEnabled = action.payload;
+    },
+    setLoadingLocking: (state, action: PayloadAction<boolean>) => {
+      state.loadingLocking = action.payload;
+    },
+    newMessage: (state, action: PayloadAction<BucketObjectItem[]>) => {
+      // debugger;
+      for (var i = 0; i < action.payload.length; i++) {
+        if (state.recordsByName.indexOf(action.payload[i].name) < 0) {
+          state.records.push(action.payload[i]);
+          state.recordsByName.push(action.payload[i].name);
+        }
+      }
+    },
+    resetMessages: (state) => {
+      state.records = [];
+      state.recordsByName = [];
+    },
+    setLoadingRecords: (state, action: PayloadAction<boolean>) => {
+      state.loadRecords = action.payload;
+    },
+    setSelectedObjects: (state, action: PayloadAction<string[]>) => {
+      state.selectedObjects = action.payload;
+    },
+    setDownloadRenameModal: (
+      state,
+      action: PayloadAction<BucketObjectItem | null>
+    ) => {
+      state.downloadRenameModal = action.payload;
+    },
+    setSelectedPreview: (
+      state,
+      action: PayloadAction<BucketObjectItem | null>
+    ) => {
+      state.selectedPreview = action.payload;
+    },
+    setPreviewOpen: (state, action: PayloadAction<boolean>) => {
+      state.previewOpen = action.payload;
+    },
+    setShareFileModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.shareFileModalOpen = action.payload;
+    },
   },
 });
 export const {
@@ -287,6 +353,19 @@ export const {
   setSimplePathHandler,
   newDownloadInit,
   newUploadInit,
+  setRecords,
+  resetMessages,
+  setLoadingVersioning,
+  setIsVersioned,
+  setLoadingLocking,
+  setLockingEnabled,
+  newMessage,
+  setSelectedObjects,
+  setDownloadRenameModal,
+  setSelectedPreview,
+  setPreviewOpen,
+  setShareFileModalOpen,
+  setLoadingRecords,
 } = objectBrowserSlice.actions;
 
 export default objectBrowserSlice.reducer;

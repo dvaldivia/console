@@ -40,10 +40,10 @@ type ObjectsRequest struct {
 }
 
 type WSResponse struct {
-	RequestID  int64          `json:"request_id,nonempty"`
-	Error      string         `json:"error,omitempty"`
-	RequestEnd bool           `json:"request_end,omitempty"`
-	Data       ObjectResponse `json:"data,omitempty"`
+	RequestID  int64            `json:"request_id,nonempty"`
+	Error      string           `json:"error,omitempty"`
+	RequestEnd bool             `json:"request_end,omitempty"`
+	Data       []ObjectResponse `json:"data,omitempty"`
 }
 
 type ObjectResponse struct {

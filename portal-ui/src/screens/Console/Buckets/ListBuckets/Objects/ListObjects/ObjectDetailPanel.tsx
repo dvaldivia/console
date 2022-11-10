@@ -650,7 +650,7 @@ const ObjectDetailPanel = ({
             version_id: actualInfo.version_id || "null",
             size: parseInt(actualInfo.size || "0"),
             content_type: "",
-            last_modified: new Date(actualInfo.last_modified),
+            last_modified: actualInfo.last_modified,
           }}
           onClosePreview={() => {
             setPreviewOpen(false);
