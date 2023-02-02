@@ -18,7 +18,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
-import { AddIcon, Button, HelpBox, LambdaIcon } from "mds";
+import { AddIcon, Button, HelpBox, LambdaIcon, Tooltip } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import get from "lodash/get";
@@ -43,7 +43,6 @@ import withSuspense from "../../Common/Components/withSuspense";
 import { setErrorSnackMessage } from "../../../../systemSlice";
 import { selBucketDetailsLoading } from "./bucketDetailsSlice";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteEvent = withSuspense(React.lazy(() => import("./DeleteEvent")));
 const AddEvent = withSuspense(React.lazy(() => import("./AddEvent")));
@@ -160,7 +159,7 @@ const BucketEventsPanel = ({ classes }: IBucketEventsProps) => {
             matchAll
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper tooltip={"Subscribe to Event"}>
+            <Tooltip tooltip={"Subscribe to Event"}>
               <Button
                 id={"Subscribe-bucket-event"}
                 onClick={() => {
@@ -170,7 +169,7 @@ const BucketEventsPanel = ({ classes }: IBucketEventsProps) => {
                 icon={<AddIcon />}
                 variant={"callAction"}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
         </Grid>
         <Grid item xs={12}>

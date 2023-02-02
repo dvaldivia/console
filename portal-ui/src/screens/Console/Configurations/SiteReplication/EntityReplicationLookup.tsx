@@ -16,7 +16,7 @@
 
 import React, { useState } from "react";
 import { Box, Grid } from "@mui/material";
-import { Button, ClustersIcon, Loader } from "mds";
+import { Button, ClustersIcon, Loader, Tooltip } from "mds";
 import SelectWrapper from "../../Common/FormComponents/SelectWrapper/SelectWrapper";
 import InputBoxWrapper from "../../Common/FormComponents/InputBoxWrapper/InputBoxWrapper";
 import useApi from "../../Common/Hooks/useApi";
@@ -25,7 +25,6 @@ import BucketEntityStatus from "./LookupStatus/BucketEntityStatus";
 import PolicyEntityStatus from "./LookupStatus/PolicyEntityStatus";
 import GroupEntityStatus from "./LookupStatus/GroupEntityStatus";
 import UserEntityStatus from "./LookupStatus/UserEntityStatus";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const EntityReplicationLookup = () => {
   const [entityType, setEntityType] = useState<string>("bucket");
@@ -139,7 +138,7 @@ const EntityReplicationLookup = () => {
             maxWidth: "80px",
           }}
         >
-          <TooltipWrapper tooltip={"View across sites"}>
+          <Tooltip tooltip={"View across sites"}>
             <Button
               id={"view-across-sites"}
               type={"button"}
@@ -151,7 +150,7 @@ const EntityReplicationLookup = () => {
               collapseOnSmall={false}
               disabled={!entityValue || !entityType}
             />
-          </TooltipWrapper>
+          </Tooltip>
         </Box>
       </Box>
 

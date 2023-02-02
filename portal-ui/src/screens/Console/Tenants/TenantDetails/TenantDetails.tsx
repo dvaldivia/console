@@ -25,6 +25,7 @@ import {
   PageHeader,
   RefreshIcon,
   TenantsIcon,
+  Tooltip,
   TrashIcon,
 } from "mds";
 import {
@@ -58,7 +59,6 @@ import { setSnackBarMessage } from "../../../../systemSlice";
 import { setTenantName } from "../tenantsSlice";
 import { getTenantAsync } from "../thunks/tenantDetailsAsync";
 import { LinearProgress } from "@mui/material";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const TenantYAML = withSuspense(React.lazy(() => import("./TenantYAML")));
 const TenantSummary = withSuspense(React.lazy(() => import("./TenantSummary")));
@@ -294,7 +294,7 @@ const TenantDetails = ({ classes }: ITenantDetailsProps) => {
             }
             actions={
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <TooltipWrapper tooltip={"Delete"}>
+                <Tooltip tooltip={"Delete"}>
                   <Button
                     id={"delete-tenant"}
                     variant="secondary"
@@ -305,8 +305,8 @@ const TenantDetails = ({ classes }: ITenantDetailsProps) => {
                     label={"Delete"}
                     icon={<TrashIcon />}
                   />
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={"Edit YAML"}>
+                </Tooltip>
+                <Tooltip tooltip={"Edit YAML"}>
                   <Button
                     label={"YAML"}
                     icon={<EditIcon />}
@@ -317,8 +317,8 @@ const TenantDetails = ({ classes }: ITenantDetailsProps) => {
                       editYaml();
                     }}
                   />
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={"Management Console"}>
+                </Tooltip>
+                <Tooltip tooltip={"Management Console"}>
                   <Button
                     id={"tenant-hop"}
                     onClick={() => {
@@ -331,8 +331,8 @@ const TenantDetails = ({ classes }: ITenantDetailsProps) => {
                     label={"Console"}
                     icon={<MinIOTierIconXs style={{ height: 16 }} />}
                   />
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={"Refresh"}>
+                </Tooltip>
+                <Tooltip tooltip={"Refresh"}>
                   <Button
                     id={"tenant-refresh"}
                     variant="regular"
@@ -343,7 +343,7 @@ const TenantDetails = ({ classes }: ITenantDetailsProps) => {
                     label={"Refresh"}
                     icon={<RefreshIcon />}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </div>
             }
           />

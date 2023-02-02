@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { Button } from "mds";
+import { Button, Loader } from "mds";
 import { useLocation, useNavigate } from "react-router-dom";
 import get from "lodash/get";
 import { Theme } from "@mui/material/styles";
@@ -46,7 +46,6 @@ import {
   setSnackBarMessage,
 } from "../../../../systemSlice";
 import { useAppDispatch } from "../../../../store";
-import { Loader } from "mds";
 import EndpointDisplay from "./EndpointDisplay";
 
 const styles = (theme: Theme) =>

@@ -24,6 +24,7 @@ import {
   IAMPoliciesIcon,
   PageHeader,
   PasswordKeyIcon,
+  Tooltip,
   TrashIcon,
   UsersIcon,
 } from "mds";
@@ -70,7 +71,6 @@ import {
 import { hasPermission } from "../../../common/SecureComponent";
 import { useAppDispatch } from "../../../store";
 import { policyDetailsSort } from "../../../utils/sortFunctions";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -296,7 +296,7 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                 <span className={classes.statusValue}>
                   {enabled ? "Enabled" : "Disabled"}
                 </span>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     enableEnabled || disableEnabled
                       ? ""
@@ -335,8 +335,8 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                     switchOnly
                     disabled={!enableEnabled && !disableEnabled}
                   />
-                </TooltipWrapper>
-                <TooltipWrapper
+                </Tooltip>
+                <Tooltip
                   tooltip={
                     hasPermission(CONSOLE_UI_RESOURCE, deleteUserPermissions)
                       ? userLoggedIn === userName
@@ -360,16 +360,16 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                       ) || userLoggedIn === userName
                     }
                   />
-                </TooltipWrapper>
+                </Tooltip>
 
-                <TooltipWrapper tooltip={"Change Password"}>
+                <Tooltip tooltip={"Change Password"}>
                   <Button
                     id={"change-user-password"}
                     onClick={changeUserPassword}
                     icon={<PasswordKeyIcon />}
                     variant={"regular"}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Fragment>
             }
           />
@@ -386,7 +386,7 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                 <React.Fragment>
                   <div className={classes.actionsTray}>
                     <PanelTitle>Groups</PanelTitle>
-                    <TooltipWrapper
+                    <Tooltip
                       tooltip={
                         canAssignGroup
                           ? "Assign groups"
@@ -406,7 +406,7 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                         variant={"callAction"}
                         disabled={!canAssignGroup}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                   </div>
                   <div className={classes.tableBlock}>
                     <TableWrapper
@@ -446,7 +446,7 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                   <div className={classes.actionsTray}>
                     <PanelTitle>Policies</PanelTitle>
 
-                    <TooltipWrapper
+                    <Tooltip
                       tooltip={
                         canAssignPolicy
                           ? "Assign Policies"
@@ -466,7 +466,7 @@ const UserDetails = ({ classes }: IUserDetailsProps) => {
                         variant={"callAction"}
                         disabled={!canAssignPolicy}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                   </div>
                   <div className={classes.tableBlock}>
                     <TableWrapper

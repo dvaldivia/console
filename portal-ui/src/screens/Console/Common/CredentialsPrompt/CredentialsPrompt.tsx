@@ -21,6 +21,7 @@ import {
   Button,
   DownloadIcon,
   ServiceAccountCredentialsIcon,
+  Tooltip,
   WarnIcon,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
@@ -29,7 +30,6 @@ import { NewServiceAccount } from "./types";
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
 import Grid from "@mui/material/Grid";
 import CredentialItem from "./CredentialItem";
-import TooltipWrapper from "../TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -247,7 +247,7 @@ const CredentialsPrompt = ({
         <Grid item xs={12} className={classes.buttonContainer}>
           {!idp && (
             <>
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   "Download credentials in a JSON file formatted for import using mc alias import. This will only include the default login credentials."
                 }
@@ -260,10 +260,10 @@ const CredentialsPrompt = ({
                   icon={<DownloadIcon />}
                   variant="callAction"
                 />
-              </TooltipWrapper>
+              </Tooltip>
 
               {Array.isArray(consoleCreds) && consoleCreds.length > 1 && (
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     "Download all access credentials to a JSON file. NOTE: This file is not formatted for import using mc alias import. If you plan to import this alias from the file, please use the Download for Import button. "
                   }
@@ -277,7 +277,7 @@ const CredentialsPrompt = ({
                     variant="callAction"
                     color="primary"
                   />
-                </TooltipWrapper>
+                </Tooltip>
               )}
             </>
           )}

@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { Theme } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { AddIcon, Button, DeleteIcon } from "mds";
+import { AddIcon, Button, DeleteIcon, Tooltip } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import {
@@ -47,7 +47,6 @@ import { SecureComponent } from "../../../common/SecureComponent";
 import { encodeURLString } from "../../../common/utils";
 import { setErrorSnackMessage, setSnackBarMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 interface IUserServiceAccountsProps {
   classes: any;
@@ -225,7 +224,7 @@ const UserServiceAccountsPanel = ({
       <div className={classes.actionsTray}>
         <PanelTitle>Access Keys</PanelTitle>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <TooltipWrapper tooltip={"Delete Selected"}>
+          <Tooltip tooltip={"Delete Selected"}>
             <Button
               id={"delete-selected"}
               onClick={() => {
@@ -236,7 +235,7 @@ const UserServiceAccountsPanel = ({
               disabled={selectedSAs.length === 0}
               variant={"secondary"}
             />
-          </TooltipWrapper>
+          </Tooltip>
           <SecureComponent
             scopes={[
               IAM_SCOPES.ADMIN_CREATE_SERVICEACCOUNT,
@@ -248,7 +247,7 @@ const UserServiceAccountsPanel = ({
             matchAll
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper tooltip={"Create Access Key"}>
+            <Tooltip tooltip={"Create Access Key"}>
               <Button
                 id={"create-service-account"}
                 label={"Create Access Key"}
@@ -261,7 +260,7 @@ const UserServiceAccountsPanel = ({
                 }}
                 disabled={!hasPolicy}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
         </Box>
       </div>

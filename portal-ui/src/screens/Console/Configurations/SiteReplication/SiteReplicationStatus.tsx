@@ -25,6 +25,7 @@ import {
   Loader,
   PageHeader,
   RefreshIcon,
+  Tooltip,
   UsersIcon,
 } from "mds";
 import PageLayout from "../../Common/Layout/PageLayout";
@@ -34,7 +35,6 @@ import { IAM_PAGES } from "../../../../common/SecureComponent/permissions";
 import ScreenTitle from "../../Common/ScreenTitle/ScreenTitle";
 import StatusCountCard from "../../Dashboard/BasicDashboard/StatusCountCard";
 import EntityReplicationLookup from "./EntityReplicationLookup";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 import { useNavigate } from "react-router-dom";
 
 export type StatsResponseType = {
@@ -133,7 +133,7 @@ const SiteReplicationStatus = () => {
           title={"Replication status from all Sites"}
           actions={
             <Fragment>
-              <TooltipWrapper tooltip={"Refresh"}>
+              <Tooltip tooltip={"Refresh"}>
                 <Button
                   id={"refresh"}
                   onClick={() => {
@@ -144,7 +144,7 @@ const SiteReplicationStatus = () => {
                   variant={"regular"}
                   collapseOnSmall={false}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </Fragment>
           }
         />

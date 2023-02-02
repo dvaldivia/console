@@ -21,13 +21,12 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { Button, UploadFolderIcon, UploadIcon } from "mds";
+import { Button, Tooltip, UploadFolderIcon, UploadIcon } from "mds";
 import {
   IAM_SCOPES,
   permissionTooltipHelper,
 } from "../../../../common/SecureComponent/permissions";
 import { hasPermission } from "../../../../common/SecureComponent";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../../store";
 
@@ -87,7 +86,7 @@ const UploadFilesButton = ({
 
   return (
     <Fragment>
-      <TooltipWrapper
+      <Tooltip
         tooltip={
           uploadEnabled
             ? "Upload Files"
@@ -108,7 +107,7 @@ const UploadFilesButton = ({
           variant={"callAction"}
           disabled={forceDisable || !uploadEnabled}
         />
-      </TooltipWrapper>
+      </Tooltip>
       <Menu
         id={`upload-main-menu`}
         aria-labelledby={`upload-main`}

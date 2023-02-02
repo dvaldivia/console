@@ -52,7 +52,7 @@ import {
 } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
 import ConfirmDeleteTargetModal from "./ConfirmDeleteTargetModal";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
+import { Tooltip } from "mds";
 
 interface IListNotificationEndpoints {
   classes: any;
@@ -189,7 +189,7 @@ const ListNotificationEndpoints = ({ classes }: IListNotificationEndpoints) => {
             value={filter}
           />
           <div className={classes.rightActionItems}>
-            <TooltipWrapper tooltip={"Refresh List"}>
+            <Tooltip tooltip={"Refresh List"}>
               <Button
                 id={"reload-notification-endpoints"}
                 label={"Refresh"}
@@ -199,8 +199,8 @@ const ListNotificationEndpoints = ({ classes }: IListNotificationEndpoints) => {
                   setIsLoading(true);
                 }}
               />
-            </TooltipWrapper>
-            <TooltipWrapper tooltip={"Add Notification Target"}>
+            </Tooltip>
+            <Tooltip tooltip={"Add Notification Target"}>
               <Button
                 id={"add-notification-target"}
                 label={" Add Notification Target"}
@@ -210,7 +210,7 @@ const ListNotificationEndpoints = ({ classes }: IListNotificationEndpoints) => {
                   navigate(IAM_PAGES.NOTIFICATIONS_ENDPOINTS_ADD);
                 }}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </div>
         </Grid>
         {isLoading && <LinearProgress />}

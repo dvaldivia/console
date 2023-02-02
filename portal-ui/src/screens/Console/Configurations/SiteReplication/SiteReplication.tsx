@@ -30,6 +30,7 @@ import {
   Loader,
   PageHeader,
   RecoverIcon,
+  Tooltip,
   TrashIcon,
 } from "mds";
 import { ErrorResponseHandler } from "../../../../common/types";
@@ -41,7 +42,6 @@ import {
 } from "../../../../systemSlice";
 import AButton from "../../Common/AButton/AButton";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 export type ReplicationSite = {
   deploymentID: string;
@@ -126,7 +126,7 @@ const SiteReplication = () => {
         >
           {hasSites ? (
             <Fragment>
-              <TooltipWrapper tooltip={"Delete All"}>
+              <Tooltip tooltip={"Delete All"}>
                 <Button
                   id={"delete-all"}
                   label={"Delete All"}
@@ -137,8 +137,8 @@ const SiteReplication = () => {
                     setIsDeleteAll(true);
                   }}
                 />
-              </TooltipWrapper>
-              <TooltipWrapper tooltip={"Replication Status"}>
+              </Tooltip>
+              <Tooltip tooltip={"Replication Status"}>
                 <Button
                   id={"replication-status"}
                   label={"Replication Status"}
@@ -149,10 +149,10 @@ const SiteReplication = () => {
                     navigate(IAM_PAGES.SITE_REPLICATION_STATUS);
                   }}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </Fragment>
           ) : null}
-          <TooltipWrapper tooltip={"Add Replication Sites"}>
+          <Tooltip tooltip={"Add Replication Sites"}>
             <Button
               id={"add-replication-site"}
               label={"Add Sites"}
@@ -163,7 +163,7 @@ const SiteReplication = () => {
                 navigate(IAM_PAGES.SITE_REPLICATION_ADD);
               }}
             />
-          </TooltipWrapper>
+          </Tooltip>
         </Box>
         {hasSites ? (
           <ReplicationSites

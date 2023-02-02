@@ -22,6 +22,7 @@ import {
   PageHeader,
   RefreshIcon,
   TenantsIcon,
+  Tooltip,
 } from "mds";
 import Grid from "@mui/material/Grid";
 import { LinearProgress, SelectChangeEvent } from "@mui/material";
@@ -49,7 +50,6 @@ import { setErrorSnackMessage } from "../../../../systemSlice";
 import SelectWrapper from "../../Common/FormComponents/SelectWrapper/SelectWrapper";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const CredentialsPrompt = withSuspense(
   React.lazy(() => import("../../Common/CredentialsPrompt/CredentialsPrompt"))
@@ -254,7 +254,7 @@ const ListTenants = ({ classes }: ITenantsList) => {
             xs={12}
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <TooltipWrapper tooltip={"Refresh Tenant List"}>
+            <Tooltip tooltip={"Refresh Tenant List"}>
               <Button
                 id={"refresh-tenant-list"}
                 onClick={() => {
@@ -263,8 +263,8 @@ const ListTenants = ({ classes }: ITenantsList) => {
                 icon={<RefreshIcon />}
                 variant={"regular"}
               />
-            </TooltipWrapper>
-            <TooltipWrapper tooltip={"Create Tenant"}>
+            </Tooltip>
+            <Tooltip tooltip={"Create Tenant"}>
               <Button
                 id={"create-tenant"}
                 label={"Create Tenant"}
@@ -274,7 +274,7 @@ const ListTenants = ({ classes }: ITenantsList) => {
                 icon={<AddIcon />}
                 variant={"callAction"}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </Grid>
         }
       />

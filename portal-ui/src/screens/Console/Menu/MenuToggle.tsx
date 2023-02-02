@@ -15,12 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { Fragment, Suspense } from "react";
-import { ApplicationLogo, VersionIcon } from "mds";
+import { ApplicationLogo, Tooltip, VersionIcon } from "mds";
 import { Box, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import { selDirectPVMode, selOpMode } from "../../../systemSlice";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 import { getLogoVar } from "../../../config";
 
 type MenuToggleProps = {
@@ -102,10 +101,7 @@ const MenuToggle = ({ isOpen, onToggle }: MenuToggleProps) => {
         }}
       >
         {isOpen ? (
-          <TooltipWrapper
-            tooltip={"Click to Collapse Menu"}
-            placement={"right"}
-          >
+          <Tooltip tooltip={"Click to Collapse Menu"} placement={"right"}>
             <div className={`logo ${stateClsName}`}>
               {!operatorMode && !directPVMode ? (
                 <Fragment>
@@ -125,7 +121,7 @@ const MenuToggle = ({ isOpen, onToggle }: MenuToggleProps) => {
                 </Fragment>
               )}
             </div>
-          </TooltipWrapper>
+          </Tooltip>
         ) : (
           <div className={`logo ${stateClsName}`}>
             <Suspense fallback={<div>...</div>}>

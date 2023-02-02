@@ -25,6 +25,7 @@ import {
   HelpBox,
   IAMPoliciesIcon,
   PageHeader,
+  Tooltip,
   UsersIcon,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
@@ -67,7 +68,6 @@ import { encodeURLString } from "../../../common/utils";
 
 import { setErrorSnackMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteGroup = withSuspense(React.lazy(() => import("./DeleteGroup")));
 const SetPolicy = withSuspense(
@@ -249,7 +249,7 @@ const Groups = ({ classes }: IGroupsProps) => {
               matchAll
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   checkedGroups.length < 1
                     ? "Please select Groups on which you want to apply Policies"
@@ -271,7 +271,7 @@ const Groups = ({ classes }: IGroupsProps) => {
                   disabled={checkedGroups.length < 1 || !applyPolicy}
                   variant={"regular"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               resource={CONSOLE_UI_RESOURCE}
@@ -279,7 +279,7 @@ const Groups = ({ classes }: IGroupsProps) => {
               matchAll
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   checkedGroups.length === 0
                     ? "Select Groups to delete"
@@ -301,7 +301,7 @@ const Groups = ({ classes }: IGroupsProps) => {
                   variant="secondary"
                   disabled={checkedGroups.length === 0 || !getGroup}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               resource={CONSOLE_UI_RESOURCE}
@@ -309,7 +309,7 @@ const Groups = ({ classes }: IGroupsProps) => {
               matchAll
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Create Group"}>
+              <Tooltip tooltip={"Create Group"}>
                 <Button
                   id={"create-group"}
                   label={"Create Group"}
@@ -319,7 +319,7 @@ const Groups = ({ classes }: IGroupsProps) => {
                     navigate(`${IAM_PAGES.GROUPS_ADD}`);
                   }}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
           </Box>
         </Grid>
@@ -328,7 +328,7 @@ const Groups = ({ classes }: IGroupsProps) => {
           <Fragment>
             {records.length > 0 && (
               <Fragment>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     getGroup
                       ? ""
@@ -358,7 +358,7 @@ const Groups = ({ classes }: IGroupsProps) => {
                       />
                     </SecureComponent>
                   </Grid>
-                </TooltipWrapper>
+                </Tooltip>
                 <Grid item xs={12} marginTop={"25px"}>
                   <HelpBox
                     title={"Groups"}

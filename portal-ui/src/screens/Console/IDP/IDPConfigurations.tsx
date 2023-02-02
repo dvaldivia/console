@@ -35,8 +35,7 @@ import { setErrorSnackMessage } from "../../../systemSlice";
 import PageLayout from "../Common/Layout/PageLayout";
 import { containerForHeader } from "../Common/FormComponents/common/styleLibrary";
 import { Grid } from "@mui/material";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
-import { AddIcon, Button, PageHeader, RefreshIcon } from "mds";
+import { AddIcon, Button, PageHeader, RefreshIcon, Tooltip } from "mds";
 import TableWrapper from "../Common/TableWrapper/TableWrapper";
 import DeleteIDPConfigurationModal from "./DeleteIDPConfigurationModal";
 
@@ -167,21 +166,21 @@ const IDPConfigurations = ({ classes, idpType }: IDPConfigurationsProps) => {
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Refresh"}>
+              <Tooltip tooltip={"Refresh"}>
                 <Button
                   id={"refresh-keys"}
                   variant="regular"
                   icon={<RefreshIcon />}
                   onClick={() => setLoading(true)}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               scopes={[IAM_SCOPES.ADMIN_CONFIG_UPDATE]}
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={`Create ${idpType} configuration`}>
+              <Tooltip tooltip={`Create ${idpType} configuration`}>
                 <Button
                   id={"create-idp"}
                   label={"Create Configuration"}
@@ -191,7 +190,7 @@ const IDPConfigurations = ({ classes, idpType }: IDPConfigurationsProps) => {
                     navigate(`/identity/idp/${idpType}/configurations/add-idp`)
                   }
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
           </Grid>
           <Grid item xs={12} className={classes.tableBlock}>

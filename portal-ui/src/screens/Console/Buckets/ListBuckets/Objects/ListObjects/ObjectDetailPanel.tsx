@@ -31,6 +31,7 @@ import {
   RetentionIcon,
   ShareIcon,
   TagsIcon,
+  Tooltip,
   VersionsIcon,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
@@ -81,7 +82,6 @@ import {
   setVersionsModeEnabled,
 } from "../../../../ObjectBrowser/objectBrowserSlice";
 import RenameLongFileName from "../../../../ObjectBrowser/RenameLongFilename";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
 import { downloadObject } from "../../../../ObjectBrowser/utils";
 
 const styles = () =>
@@ -678,7 +678,7 @@ const ObjectDetailPanel = ({
             }
             items={multiActionButtons}
           />
-          <TooltipWrapper
+          <Tooltip
             tooltip={
               canDelete
                 ? ""
@@ -722,7 +722,7 @@ const ObjectDetailPanel = ({
                 />
               </SecureComponent>
             </Grid>
-          </TooltipWrapper>
+          </Tooltip>
           <Grid item xs={12} className={classes.headerForSection}>
             <span>Object Info</span>
             <ObjectInfoIcon />

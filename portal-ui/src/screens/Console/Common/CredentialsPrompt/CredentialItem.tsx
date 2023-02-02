@@ -18,11 +18,10 @@ import React from "react";
 import { InputAdornment, OutlinedInput } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import { Theme } from "@mui/material/styles";
-import { Button, CopyIcon } from "mds";
+import { Button, CopyIcon, Tooltip } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { fieldBasic } from "../FormComponents/common/styleLibrary";
-import TooltipWrapper from "../TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -74,7 +73,7 @@ const CredentialItem = ({
           readOnly
           endAdornment={
             <InputAdornment position="end">
-              <TooltipWrapper tooltip={"Copy"}>
+              <Tooltip tooltip={"Copy"}>
                 <CopyToClipboard text={value}>
                   <Button
                     id={"copy-clipboard"}
@@ -89,7 +88,7 @@ const CredentialItem = ({
                     icon={<CopyIcon />}
                   />
                 </CopyToClipboard>
-              </TooltipWrapper>
+              </Tooltip>
             </InputAdornment>
           }
         />

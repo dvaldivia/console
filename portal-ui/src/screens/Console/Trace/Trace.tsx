@@ -18,7 +18,7 @@ import React, { Fragment, useState } from "react";
 import { DateTime } from "luxon";
 import { Box, Grid } from "@mui/material";
 import { IMessageEvent, w3cwebsocket as W3CWebSocket } from "websocket";
-import { Button, FilterIcon, PageHeader } from "mds";
+import { Button, FilterIcon, PageHeader, Tooltip } from "mds";
 import { AppState, useAppDispatch } from "../../../store";
 import { useSelector } from "react-redux";
 import { TraceMessage } from "./types";
@@ -43,7 +43,6 @@ import {
   traceMessageReceived,
   traceResetMessages,
 } from "./traceSlice";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -308,7 +307,7 @@ const Trace = ({ classes }: ITrace) => {
                   gap: "15px",
                 }}
               >
-                <TooltipWrapper tooltip={"More filter options"}>
+                <Tooltip tooltip={"More filter options"}>
                   <Button
                     id={"filter-toggle"}
                     onClick={() => {
@@ -323,7 +322,7 @@ const Trace = ({ classes }: ITrace) => {
                       background: toggleFilter ? "rgba(8, 28, 66, 0.04)" : "",
                     }}
                   />
-                </TooltipWrapper>
+                </Tooltip>
 
                 {!traceStarted && (
                   <Button

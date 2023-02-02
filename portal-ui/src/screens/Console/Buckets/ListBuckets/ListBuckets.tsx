@@ -29,6 +29,7 @@ import {
   RefreshIcon,
   SelectAllIcon,
   SelectMultipleIcon,
+  Tooltip,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
@@ -62,7 +63,6 @@ import { useAppDispatch } from "../../../../store";
 import { useSelector } from "react-redux";
 import { selFeatures } from "../../consoleSlice";
 import AutoColorIcon from "../../Common/Components/AutoColorIcon";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 import AButton from "../../Common/AButton/AButton";
 import { setLoadingObjects } from "../../ObjectBrowser/objectBrowserSlice";
 
@@ -263,7 +263,7 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
           >
             {!obOnly && (
               <Fragment>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     !hasBuckets
                       ? ""
@@ -282,10 +282,10 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                     variant={bulkSelect ? "callAction" : "regular"}
                     disabled={!hasBuckets}
                   />
-                </TooltipWrapper>
+                </Tooltip>
 
                 {bulkSelect && (
-                  <TooltipWrapper
+                  <Tooltip
                     tooltip={
                       !hasBuckets
                         ? ""
@@ -300,10 +300,10 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                       icon={<SelectAllIcon />}
                       variant={"regular"}
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 )}
 
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     !hasBuckets
                       ? ""
@@ -328,9 +328,9 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                     variant={"regular"}
                     disabled={selectedBuckets.length === 0 || !canPutLifecycle}
                   />
-                </TooltipWrapper>
+                </Tooltip>
 
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     !hasBuckets
                       ? ""
@@ -350,11 +350,11 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                     variant={"regular"}
                     disabled={selectedBuckets.length === 0}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Fragment>
             )}
 
-            <TooltipWrapper tooltip={"Refresh"}>
+            <Tooltip tooltip={"Refresh"}>
               <Button
                 id={"refresh-buckets"}
                 onClick={() => {
@@ -363,10 +363,10 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                 icon={<RefreshIcon />}
                 variant={"regular"}
               />
-            </TooltipWrapper>
+            </Tooltip>
 
             {!obOnly && (
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   canCreateBucket
                     ? ""
@@ -386,7 +386,7 @@ const ListBuckets = ({ classes }: IListBucketsProps) => {
                   disabled={!canCreateBucket}
                   label={"Create Bucket"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             )}
           </Grid>
         </Grid>

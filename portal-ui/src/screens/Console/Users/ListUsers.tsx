@@ -25,6 +25,7 @@ import {
   GroupsIcon,
   HelpBox,
   PageHeader,
+  Tooltip,
   UsersIcon,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
@@ -65,7 +66,6 @@ import {
 } from "../../../common/SecureComponent";
 import { setErrorSnackMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteUser = withSuspense(React.lazy(() => import("./DeleteUser")));
 const AddToGroup = withSuspense(React.lazy(() => import("./BulkAddToGroup")));
@@ -224,7 +224,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
             matchAll
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper
+            <Tooltip
               tooltip={
                 hasPermission("console", [IAM_SCOPES.ADMIN_DELETE_USER])
                   ? checkedUsers.length === 0
@@ -247,14 +247,14 @@ const ListUsers = ({ classes }: IUsersProps) => {
                 variant={"secondary"}
                 aria-label="delete-selected-users"
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
           <SecureComponent
             scopes={[IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP]}
             resource={CONSOLE_UI_RESOURCE}
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper
+            <Tooltip
               tooltip={
                 hasPermission("console", [IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP])
                   ? checkedUsers.length === 0
@@ -278,7 +278,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
                 }}
                 variant={"regular"}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
           <SecureComponent
             scopes={[
@@ -290,7 +290,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
             matchAll
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper
+            <Tooltip
               tooltip={
                 hasPermission(
                   "console",
@@ -335,7 +335,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
                   )
                 }
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
         </Grid>
 
@@ -344,7 +344,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
           <Fragment>
             {records.length > 0 && (
               <Fragment>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     viewUser
                       ? ""
@@ -383,7 +383,7 @@ const ListUsers = ({ classes }: IUsersProps) => {
                       />
                     </SecureComponent>
                   </Grid>
-                </TooltipWrapper>
+                </Tooltip>
                 <HelpBox
                   title={"Users"}
                   iconComponent={<UsersIcon />}

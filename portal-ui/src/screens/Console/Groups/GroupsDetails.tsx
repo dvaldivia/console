@@ -1,7 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Theme } from "@mui/material/styles";
 import { useNavigate, useParams } from "react-router-dom";
-import { AddIcon, Button, GroupsIcon, IAMPoliciesIcon, TrashIcon } from "mds";
+import {
+  AddIcon,
+  Button,
+  GroupsIcon,
+  IAMPoliciesIcon,
+  Tooltip,
+  TrashIcon,
+} from "mds";
 import createStyles from "@mui/styles/createStyles";
 import {
   actionsTray,
@@ -49,7 +56,6 @@ import { decodeURLString, encodeURLString } from "../../../common/utils";
 import { setModalErrorSnackMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
 import { setSelectedPolicies } from "../Users/AddUsersSlice";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -219,7 +225,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
           scopes={addUserToGroupPermissions}
           errorProps={{ disabled: true }}
         >
-          <TooltipWrapper
+          <Tooltip
             tooltip={
               canEditGroupMembers
                 ? memberActionText
@@ -239,7 +245,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
               }}
               disabled={!canEditGroupMembers}
             />
-          </TooltipWrapper>
+          </Tooltip>
         </SecureComponent>
       </div>
 
@@ -283,7 +289,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
     <React.Fragment>
       <div className={classes.actionsTray}>
         <PanelTitle>Policies</PanelTitle>
-        <TooltipWrapper
+        <Tooltip
           tooltip={
             canSetPolicies
               ? "Set Policies"
@@ -303,7 +309,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
             }}
             disabled={!canSetPolicies}
           />
-        </TooltipWrapper>
+        </Tooltip>
       </div>
       <div className={classes.tableBlock}>
         <TableWrapper
@@ -353,7 +359,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
                 <span id="group-status" className={classes.statusValue}>
                   {isGroupEnabled ? "Enabled" : "Disabled"}
                 </span>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     hasPermission(
                       CONSOLE_UI_RESOURCE,
@@ -385,10 +391,10 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
                       switchOnly
                     />
                   </SecureComponent>
-                </TooltipWrapper>
+                </Tooltip>
 
                 <div className={classes.spacerLeft}>
-                  <TooltipWrapper tooltip={"Delete Group"}>
+                  <Tooltip tooltip={"Delete Group"}>
                     <Button
                       id={"delete-user-group"}
                       variant="secondary"
@@ -397,7 +403,7 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
                         setDeleteOpen(true);
                       }}
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 </div>
               </Fragment>
             }

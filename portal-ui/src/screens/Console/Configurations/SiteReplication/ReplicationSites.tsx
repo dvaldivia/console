@@ -17,12 +17,13 @@
 import React, { useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
-import { Box, DialogContentText, Tooltip } from "@mui/material";
+import { Box, DialogContentText } from "@mui/material";
 import {
   Button,
   CircleIcon,
   ConfirmDeleteIcon,
   EditIcon,
+  Tooltip,
   TrashIcon,
 } from "mds";
 import { ReplicationSite } from "./SiteReplication";
@@ -35,7 +36,6 @@ import {
   modalStyleUtils,
   spacingUtils,
 } from "../../Common/FormComponents/common/styleLibrary";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 import EditSiteEndPoint from "./EditSiteEndPoint";
 
 const styles = (theme: Theme) =>
@@ -133,7 +133,7 @@ const ReplicationSites = ({
                     }}
                   >
                     {siteInfo.isCurrent ? (
-                      <Tooltip title={"This site/cluster"} placement="top">
+                      <Tooltip tooltip={"This site/cluster"} placement="top">
                         <Box
                           sx={{
                             "& .min-icon": {
@@ -146,7 +146,7 @@ const ReplicationSites = ({
                         </Box>
                       </Tooltip>
                     ) : null}
-                    <Tooltip title={siteInfo.endpoint}>
+                    <Tooltip tooltip={siteInfo.endpoint}>
                       <Box
                         sx={{
                           overflow: "hidden",
@@ -184,7 +184,7 @@ const ReplicationSites = ({
                     },
                   }}
                 >
-                  <TooltipWrapper tooltip="Delete Site">
+                  <Tooltip tooltip="Delete Site">
                     <Button
                       id={`delete-site-${key}-${index}`}
                       variant="secondary"
@@ -200,8 +200,8 @@ const ReplicationSites = ({
                         padding: "0",
                       }}
                     />
-                  </TooltipWrapper>
-                  <TooltipWrapper tooltip={"Edit Endpoint"}>
+                  </Tooltip>
+                  <Tooltip tooltip={"Edit Endpoint"}>
                     <Button
                       id={`edit-icon-${key}-${index}`}
                       variant="regular"
@@ -218,7 +218,7 @@ const ReplicationSites = ({
                         marginLeft: "8px",
                       }}
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 </Box>
               </ListItemButton>
 

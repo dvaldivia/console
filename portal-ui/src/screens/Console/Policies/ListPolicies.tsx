@@ -15,7 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { Fragment, useEffect, useState } from "react";
-import { AddIcon, Button, HelpBox, IAMPoliciesIcon, PageHeader } from "mds";
+import {
+  AddIcon,
+  Button,
+  HelpBox,
+  IAMPoliciesIcon,
+  PageHeader,
+  Tooltip,
+} from "mds";
 import { useNavigate } from "react-router-dom";
 import get from "lodash/get";
 import { Theme } from "@mui/material/styles";
@@ -55,7 +62,6 @@ import withSuspense from "../Common/Components/withSuspense";
 import { encodeURLString } from "../../../common/utils";
 import { setErrorSnackMessage } from "../../../systemSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeletePolicy = withSuspense(React.lazy(() => import("./DeletePolicy")));
 
@@ -208,7 +214,7 @@ const ListPolicies = ({ classes }: IPoliciesProps) => {
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   canCreatePolicy
                     ? ""
@@ -228,7 +234,7 @@ const ListPolicies = ({ classes }: IPoliciesProps) => {
                   }}
                   disabled={!canCreatePolicy}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
           </Grid>
           <Grid item xs={12} className={classes.tableBlock}>

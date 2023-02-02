@@ -23,7 +23,7 @@ import { IPool } from "../../../ListTenants/types";
 import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import { AddIcon, Button, SearchIcon } from "mds";
+import { AddIcon, Button, SearchIcon, Tooltip } from "mds";
 import TableWrapper from "../../../../Common/TableWrapper/TableWrapper";
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
@@ -34,7 +34,6 @@ import {
   tenantDetailsStyles,
 } from "../../../../Common/FormComponents/common/styleLibrary";
 import { setSelectedPool } from "../../../tenantsSlice";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
 
 interface IPoolsSummary {
   classes: any;
@@ -108,7 +107,7 @@ const PoolsListing = ({ classes, setPoolDetailsView }: IPoolsSummary) => {
           variant="standard"
         />
 
-        <TooltipWrapper tooltip={"Expand Tenant"}>
+        <Tooltip tooltip={"Expand Tenant"}>
           <Button
             id={"expand-tenant"}
             label={"Expand Tenant"}
@@ -122,7 +121,7 @@ const PoolsListing = ({ classes, setPoolDetailsView }: IPoolsSummary) => {
             icon={<AddIcon />}
             variant={"callAction"}
           />
-        </TooltipWrapper>
+        </Tooltip>
       </Grid>
       <Grid item xs={12} className={classes.tableBlock}>
         <TableWrapper

@@ -24,6 +24,7 @@ import {
   PageHeader,
   RefreshIcon,
   SearchIcon,
+  Tooltip,
   TrashIcon,
 } from "mds";
 import { Theme } from "@mui/material/styles";
@@ -74,7 +75,6 @@ import { decodeURLString, encodeURLString } from "../../../common/utils";
 import { setErrorSnackMessage, setSnackBarMessage } from "../../../systemSlice";
 import { selFeatures } from "../consoleSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeletePolicy = withSuspense(React.lazy(() => import("./DeletePolicy")));
 
@@ -383,7 +383,7 @@ const PolicyDetails = ({ classes }: IPolicyDetailsProps) => {
                   resource={CONSOLE_UI_RESOURCE}
                   errorProps={{ disabled: true }}
                 >
-                  <TooltipWrapper
+                  <Tooltip
                     tooltip={
                       canDeletePolicy
                         ? ""
@@ -401,10 +401,10 @@ const PolicyDetails = ({ classes }: IPolicyDetailsProps) => {
                       onClick={deletePolicy}
                       disabled={!canDeletePolicy}
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 </SecureComponent>
 
-                <TooltipWrapper tooltip={"Refresh"}>
+                <Tooltip tooltip={"Refresh"}>
                   <Button
                     id={"refresh-policy"}
                     label={"Refresh"}
@@ -414,7 +414,7 @@ const PolicyDetails = ({ classes }: IPolicyDetailsProps) => {
                       refreshPolicyDetails();
                     }}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Fragment>
             }
           />
@@ -559,7 +559,7 @@ const PolicyDetails = ({ classes }: IPolicyDetailsProps) => {
                         resource={CONSOLE_UI_RESOURCE}
                         errorProps={{ disabled: true }}
                       >
-                        <TooltipWrapper
+                        <Tooltip
                           tooltip={
                             canEditPolicy
                               ? ""
@@ -579,7 +579,7 @@ const PolicyDetails = ({ classes }: IPolicyDetailsProps) => {
                             }
                             label={"Save"}
                           />
-                        </TooltipWrapper>
+                        </Tooltip>
                       </SecureComponent>
                     </Grid>
                     {addLoading && (

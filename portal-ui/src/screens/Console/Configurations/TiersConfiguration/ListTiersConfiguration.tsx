@@ -31,6 +31,7 @@ import {
   TierOnlineIcon,
   TiersIcon,
   TiersNotAvailableIcon,
+  Tooltip,
 } from "mds";
 import Grid from "@mui/material/Grid";
 import {
@@ -66,7 +67,6 @@ import { tierTypes } from "./utils";
 import { selDistSet, setErrorSnackMessage } from "../../../../systemSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const UpdateTierCredentialsModal = withSuspense(
   React.lazy(() => import("./UpdateTierCredentialsModal"))
@@ -337,7 +337,7 @@ const ListTiersConfiguration = ({ classes }: IListTiersConfig) => {
                     setIsLoading(true);
                   }}
                 />
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     hasSetTier
                       ? ""
@@ -359,7 +359,7 @@ const ListTiersConfiguration = ({ classes }: IListTiersConfig) => {
                       variant="callAction"
                     />
                   </SecureComponent>
-                </TooltipWrapper>
+                </Tooltip>
               </div>
             </Grid>
             {isLoading && <LinearProgress />}

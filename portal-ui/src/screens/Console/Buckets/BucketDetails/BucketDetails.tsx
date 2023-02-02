@@ -30,6 +30,7 @@ import {
   FolderIcon,
   PageHeader,
   RefreshIcon,
+  Tooltip,
   TrashIcon,
 } from "mds";
 import { useSelector } from "react-redux";
@@ -79,7 +80,6 @@ import {
   setBucketInfo,
 } from "./bucketDetailsSlice";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteBucket = withSuspense(
   React.lazy(() => import("../ListBuckets/DeleteBucket"))
@@ -213,7 +213,7 @@ const BucketDetails = ({ classes }: IBucketDetailsProps) => {
           <BackLink label={"Buckets"} onClick={() => navigate("/buckets")} />
         }
         actions={
-          <TooltipWrapper
+          <Tooltip
             tooltip={
               canBrowse
                 ? "Browse Bucket"
@@ -237,7 +237,7 @@ const BucketDetails = ({ classes }: IBucketDetailsProps) => {
               }}
               disabled={!canBrowse}
             />
-          </TooltipWrapper>
+          </Tooltip>
         }
       />
       <PageLayout className={classes.pageContainer}>
@@ -273,7 +273,7 @@ const BucketDetails = ({ classes }: IBucketDetailsProps) => {
                   resource={bucketName}
                   errorProps={{ disabled: true }}
                 >
-                  <TooltipWrapper
+                  <Tooltip
                     tooltip={
                       canDelete
                         ? ""
@@ -296,7 +296,7 @@ const BucketDetails = ({ classes }: IBucketDetailsProps) => {
                       variant={"secondary"}
                       disabled={!canDelete}
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 </SecureComponent>
                 <Button
                   id={"refresh-bucket-info"}

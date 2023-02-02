@@ -26,6 +26,7 @@ import {
   HelpBox,
   InfoIcon,
   PageHeader,
+  Tooltip,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
@@ -47,7 +48,6 @@ import api from "../../../../../common/api";
 import PageLayout from "../../../Common/Layout/PageLayout";
 import InputUnitMenu from "../../../Common/FormComponents/InputUnitMenu/InputUnitMenu";
 import FormLayout from "../../../Common/FormLayout";
-import TooltipWrapper from "../../../Common/TooltipWrapper/TooltipWrapper";
 import SectionTitle from "../../../Common/SectionTitle";
 import {
   resetForm,
@@ -327,7 +327,7 @@ const AddBucket = ({ classes }: IsetProps) => {
                     <br />
                   </Fragment>
                 )}
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     versioningAllowed
                       ? lockingEnabled && versioningEnabled
@@ -358,10 +358,10 @@ const AddBucket = ({ classes }: IsetProps) => {
                       !versioningAllowed
                     }
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Grid>
               <Grid item xs={12}>
-                <TooltipWrapper
+                <Tooltip
                   tooltip={
                     lockingAllowed
                       ? ""
@@ -396,7 +396,7 @@ const AddBucket = ({ classes }: IsetProps) => {
                     }}
                     label={"Object Locking"}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Grid>
 
               <Grid item xs={12}>
@@ -516,7 +516,7 @@ const AddBucket = ({ classes }: IsetProps) => {
                 onClick={resForm}
                 label={"Clear"}
               />
-              <TooltipWrapper
+              <Tooltip
                 tooltip={
                   invalidFields.length > 0 || !isDirty || hasErrors
                     ? "You must apply a valid name to the bucket"
@@ -536,7 +536,7 @@ const AddBucket = ({ classes }: IsetProps) => {
                   }
                   label={"Create Bucket"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </Grid>
             {addLoading && (
               <Grid item xs={12}>

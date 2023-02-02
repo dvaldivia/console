@@ -28,6 +28,7 @@ import {
   PrometheusErrorIcon,
   ServersIcon,
   StorageIcon,
+  Tooltip,
   TotalObjectsIcon,
   UptimeIcon,
 } from "mds";
@@ -41,7 +42,6 @@ import ReportedUsage from "./ReportedUsage";
 import { Link } from "react-router-dom";
 import { IAM_PAGES } from "../../../../common/SecureComponent/permissions";
 import TimeStatItem from "../TimeStatItem";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const BoxItem = ({ children }: { children: any }) => {
   return (
@@ -164,7 +164,7 @@ const BasicDashboard = ({ usage }: IDashboardProps) => {
                       marginRight: "75px",
                     }}
                   >
-                    <TooltipWrapper tooltip={"Browse"}>
+                    <Tooltip tooltip={"Browse"}>
                       <Button
                         id={"browse-dashboard"}
                         onClick={() => {}}
@@ -178,7 +178,7 @@ const BasicDashboard = ({ usage }: IDashboardProps) => {
                           marginTop: 20,
                         }}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                   </Link>
                 }
               />

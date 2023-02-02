@@ -22,6 +22,7 @@ import {
   OfflineRegistrationIcon,
   OnlineRegistrationIcon,
   PageHeader,
+  Tooltip,
   UsersIcon,
 } from "mds";
 import createStyles from "@mui/styles/createStyles";
@@ -68,7 +69,6 @@ import { TabPanel } from "../../shared/tabs";
 import { ClusterRegistered, FormTitle, ProxyConfiguration } from "./utils";
 import ApiKeyRegister from "./ApiKeyRegister";
 import CopyToClipboard from "react-copy-to-clipboard";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 interface IRegister {
   classes: any;
@@ -661,7 +661,7 @@ const Register = ({ classes }: IRegister) => {
                   https://subnet.min.io/cluster/register
                 </Link>
 
-                <TooltipWrapper tooltip={"Copy to Clipboard"}>
+                <Tooltip tooltip={"Copy to Clipboard"}>
                   <CopyToClipboard text={offlineRegUrl}>
                     <Button
                       type={"button"}
@@ -671,7 +671,7 @@ const Register = ({ classes }: IRegister) => {
                       variant={"regular"}
                     />
                   </CopyToClipboard>
-                </TooltipWrapper>
+                </Tooltip>
               </Box>
 
               <div

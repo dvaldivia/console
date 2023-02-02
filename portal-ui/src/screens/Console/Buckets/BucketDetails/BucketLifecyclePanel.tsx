@@ -22,7 +22,7 @@ import withStyles from "@mui/styles/withStyles";
 import get from "lodash/get";
 import Grid from "@mui/material/Grid";
 import { LifeCycleItem } from "../types";
-import { AddIcon, Button, HelpBox, TiersIcon } from "mds";
+import { AddIcon, Button, HelpBox, TiersIcon, Tooltip } from "mds";
 import {
   actionsTray,
   searchField,
@@ -41,7 +41,6 @@ import { IAM_SCOPES } from "../../../../common/SecureComponent/permissions";
 import DeleteBucketLifecycleRule from "./DeleteBucketLifecycleRule";
 import { selBucketDetailsLoading } from "./bucketDetailsSlice";
 import { useParams } from "react-router-dom";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -282,7 +281,7 @@ const BucketLifecyclePanel = ({ classes }: IBucketLifecyclePanelProps) => {
             matchAll
             errorProps={{ disabled: true }}
           >
-            <TooltipWrapper tooltip={"Add Lifecycle Rule"}>
+            <Tooltip tooltip={"Add Lifecycle Rule"}>
               <Button
                 id={"add-bucket-lifecycle-rule"}
                 onClick={() => {
@@ -292,7 +291,7 @@ const BucketLifecyclePanel = ({ classes }: IBucketLifecyclePanelProps) => {
                 icon={<AddIcon />}
                 variant={"callAction"}
               />
-            </TooltipWrapper>
+            </Tooltip>
           </SecureComponent>
         </Grid>
         <Grid item xs={12}>

@@ -17,7 +17,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import { LinearProgress, SelectChangeEvent } from "@mui/material";
-import { AddIcon, BucketEncryptionIcon, Button } from "mds";
+import { AddIcon, BucketEncryptionIcon, Button, Tooltip } from "mds";
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
@@ -38,7 +38,6 @@ import {
   IAM_SCOPES,
 } from "../../../../common/SecureComponent/permissions";
 import { SecureComponent } from "../../../../common/SecureComponent";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 import AddKeyModal from "./AddKeyModal";
 
 const styles = (theme: Theme) =>
@@ -213,7 +212,7 @@ const EnableBucketEncryption = ({
                       resource={CONSOLE_UI_RESOURCE}
                       errorProps={{ disabled: true }}
                     >
-                      <TooltipWrapper tooltip={"Add key"}>
+                      <Tooltip tooltip={"Add key"}>
                         <Button
                           id={"import-key"}
                           variant={"regular"}
@@ -223,7 +222,7 @@ const EnableBucketEncryption = ({
                             e.preventDefault();
                           }}
                         />
-                      </TooltipWrapper>
+                      </Tooltip>
                     </SecureComponent>
                   </Grid>
                 </Grid>

@@ -18,7 +18,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
-import { AddIcon, Button } from "mds";
+import { AddIcon, Button, Tooltip } from "mds";
 import { Paper } from "@mui/material";
 import createStyles from "@mui/styles/createStyles";
 import { ErrorResponseHandler } from "../../../../common/types";
@@ -44,7 +44,6 @@ import { setErrorSnackMessage } from "../../../../systemSlice";
 import makeStyles from "@mui/styles/makeStyles";
 import { selBucketDetailsLoading } from "./bucketDetailsSlice";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const AddAccessRuleModal = withSuspense(
   React.lazy(() => import("./AddAccessRule"))
@@ -206,7 +205,7 @@ const AccessRule = () => {
           matchAll
           errorProps={{ disabled: true }}
         >
-          <TooltipWrapper tooltip={"Add Access Rule"}>
+          <Tooltip tooltip={"Add Access Rule"}>
             <Button
               id={"add-bucket-access-rule"}
               onClick={() => {
@@ -216,7 +215,7 @@ const AccessRule = () => {
               icon={<AddIcon />}
               variant={"callAction"}
             />
-          </TooltipWrapper>
+          </Tooltip>
         </SecureComponent>
       </Grid>
       <Paper className={classes.tableBlock}>

@@ -53,6 +53,7 @@ import {
   DeleteIcon,
   DeleteNonCurrentIcon,
   SelectMultipleIcon,
+  Tooltip,
   VersionsIcon,
 } from "mds";
 import FileVersionItem from "./FileVersionItem";
@@ -80,7 +81,6 @@ import {
   updateProgress,
 } from "../../../../ObjectBrowser/objectBrowserSlice";
 import { List, ListRowProps } from "react-virtualized";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -549,7 +549,7 @@ const VersionsNavigator = ({
                 }
                 actions={
                   <Fragment>
-                    <TooltipWrapper tooltip={"Select Multiple Versions"}>
+                    <Tooltip tooltip={"Select Multiple Versions"}>
                       <Button
                         id={"select-multiple-versions"}
                         onClick={() => {
@@ -559,9 +559,9 @@ const VersionsNavigator = ({
                         variant={selectEnabled ? "callAction" : "regular"}
                         style={{ marginRight: 8 }}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                     {selectEnabled && (
-                      <TooltipWrapper tooltip={"Delete Selected Versions"}>
+                      <Tooltip tooltip={"Delete Selected Versions"}>
                         <Button
                           id={"delete-multiple-versions"}
                           onClick={() => {
@@ -572,9 +572,9 @@ const VersionsNavigator = ({
                           style={{ marginRight: 8 }}
                           disabled={selectedItems.length === 0}
                         />
-                      </TooltipWrapper>
+                      </Tooltip>
                     )}
-                    <TooltipWrapper tooltip={"Delete Non Current Versions"}>
+                    <Tooltip tooltip={"Delete Non Current Versions"}>
                       <Button
                         id={"delete-non-current"}
                         onClick={() => {
@@ -585,7 +585,7 @@ const VersionsNavigator = ({
                         style={{ marginRight: 15 }}
                         disabled={versions.length <= 1}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                     <span className={classes.sortByLabel}>Sort by</span>
                     <SelectWrapper
                       id={"sort-by"}

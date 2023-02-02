@@ -35,6 +35,7 @@ import {
   PreviewIcon,
   RefreshIcon,
   ShareIcon,
+  Tooltip,
 } from "mds";
 import { DateTime } from "luxon";
 import createStyles from "@mui/styles/createStyles";
@@ -128,7 +129,6 @@ import {
   setBucketInfo,
 } from "../../../BucketDetails/bucketDetailsSlice";
 import RenameLongFileName from "../../../../ObjectBrowser/RenameLongFilename";
-import TooltipWrapper from "../../../../Common/TooltipWrapper/TooltipWrapper";
 import ListObjectsTable from "./ListObjectsTable";
 import {
   downloadSelected,
@@ -948,7 +948,7 @@ const ListObjects = () => {
             actions={
               <div className={classes.actionsSection}>
                 {!anonymousMode && (
-                  <TooltipWrapper tooltip={"Rewind Bucket"}>
+                  <Tooltip tooltip={"Rewind Bucket"}>
                     <Button
                       id={"rewind-objects-list"}
                       label={"Rewind"}
@@ -984,9 +984,9 @@ const ListObjects = () => {
                         ])
                       }
                     />
-                  </TooltipWrapper>
+                  </Tooltip>
                 )}
-                <TooltipWrapper tooltip={"Reload List"}>
+                <Tooltip tooltip={"Reload List"}>
                   <Button
                     id={"refresh-objects-list"}
                     label={"Refresh"}
@@ -1010,7 +1010,7 @@ const ListObjects = () => {
                           ]) || rewindEnabled
                     }
                   />
-                </TooltipWrapper>
+                </Tooltip>
                 <input
                   type="file"
                   multiple

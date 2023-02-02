@@ -16,7 +16,14 @@
 
 import { Grid, Theme } from "@mui/material";
 import { createStyles, withStyles } from "@mui/styles";
-import { AddIcon, Button, PageHeader, RefreshIcon, UploadIcon } from "mds";
+import {
+  AddIcon,
+  Button,
+  PageHeader,
+  RefreshIcon,
+  Tooltip,
+  UploadIcon,
+} from "mds";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../common/api";
@@ -40,7 +47,6 @@ import {
 import PageLayout from "../Common/Layout/PageLayout";
 import SearchBox from "../Common/SearchBox";
 import TableWrapper from "../Common/TableWrapper/TableWrapper";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteKMSModal = withSuspense(
   React.lazy(() => import("./DeleteKMSModal"))
@@ -171,21 +177,21 @@ const ListKeys = ({ classes }: IKeysProps) => {
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Refresh"}>
+              <Tooltip tooltip={"Refresh"}>
                 <Button
                   id={"refresh-keys"}
                   variant="regular"
                   icon={<RefreshIcon />}
                   onClick={() => setLoading(true)}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               scopes={[IAM_SCOPES.KMS_IMPORT_KEY]}
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Import Key"}>
+              <Tooltip tooltip={"Import Key"}>
                 <Button
                   id={"import-key"}
                   variant={"regular"}
@@ -194,14 +200,14 @@ const ListKeys = ({ classes }: IKeysProps) => {
                     navigate(IAM_PAGES.KMS_KEYS_IMPORT);
                   }}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               scopes={[IAM_SCOPES.KMS_CREATE_KEY]}
               resource={CONSOLE_UI_RESOURCE}
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Create Key"}>
+              <Tooltip tooltip={"Create Key"}>
                 <Button
                   id={"create-key"}
                   label={"Create Key"}
@@ -209,7 +215,7 @@ const ListKeys = ({ classes }: IKeysProps) => {
                   icon={<AddIcon />}
                   onClick={() => navigate(IAM_PAGES.KMS_KEYS_ADD)}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
           </Grid>
           <Grid item xs={12} className={classes.tableBlock}>

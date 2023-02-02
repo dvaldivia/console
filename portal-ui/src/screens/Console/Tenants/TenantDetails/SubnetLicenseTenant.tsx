@@ -26,9 +26,8 @@ import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { ITenant } from "../ListTenants/types";
-import { Button } from "mds";
+import { Button, Tooltip } from "mds";
 import { SubnetInfo } from "../../License/types";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 interface ISubnetLicenseTenant {
   classes: any;
@@ -233,18 +232,18 @@ const SubnetLicenseTenant = ({
                 }}
                 className={classes.noUnderLine}
               >
-                <TooltipWrapper tooltip={"Activate Product"}>
+                <Tooltip tooltip={"Activate Product"}>
                   <Button
                     id={"activate-product"}
                     label={"Activate Product"}
                     onClick={() => false}
                     variant={"callAction"}
                   />
-                </TooltipWrapper>
+                </Tooltip>
               </Link>
             )}
             {licenseInfo && tenant && (
-              <TooltipWrapper tooltip={"Attach License"}>
+              <Tooltip tooltip={"Attach License"}>
                 <Button
                   id={"attach-license"}
                   disabled={loadingActivateProduct}
@@ -252,7 +251,7 @@ const SubnetLicenseTenant = ({
                   onClick={() => activateProduct(tenant.namespace, tenant.name)}
                   variant={"callAction"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             )}
           </Grid>
         )

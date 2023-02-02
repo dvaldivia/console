@@ -16,15 +16,14 @@
 
 import React from "react";
 import Grid from "@mui/material/Grid";
-import { Box, InputLabel, Tooltip } from "@mui/material";
+import { Box, InputLabel } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
-import { Button, CopyIcon, HelpIcon } from "mds";
+import { Button, CopyIcon, HelpIcon, Tooltip } from "mds";
 import { fieldBasic } from "../common/styleLibrary";
 import CopyToClipboard from "react-copy-to-clipboard";
 import CodeEditor from "@uiw/react-textarea-code-editor";
-import TooltipWrapper from "../../TooltipWrapper/TooltipWrapper";
 
 interface ICodeWrapper {
   value: string;
@@ -60,7 +59,7 @@ const CodeMirrorWrapper = ({
           <span>{label}</span>
           {tooltip !== "" && (
             <div className={classes.tooltipContainer}>
-              <Tooltip title={tooltip} placement="top-start">
+              <Tooltip tooltip={tooltip} placement="top">
                 <div className={classes.tooltip}>
                   <HelpIcon />
                 </div>
@@ -123,7 +122,7 @@ const CodeMirrorWrapper = ({
             },
           }}
         >
-          <TooltipWrapper tooltip={"Copy to Clipboard"}>
+          <Tooltip tooltip={"Copy to Clipboard"}>
             <CopyToClipboard text={value}>
               <Button
                 type={"button"}
@@ -133,7 +132,7 @@ const CodeMirrorWrapper = ({
                 variant={"regular"}
               />
             </CopyToClipboard>
-          </TooltipWrapper>
+          </Tooltip>
         </Box>
       </Grid>
     </React.Fragment>

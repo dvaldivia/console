@@ -23,6 +23,7 @@ import {
   HelpBox,
   PageHeader,
   PasswordKeyIcon,
+  Tooltip,
 } from "mds";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +60,6 @@ import { setErrorSnackMessage, setSnackBarMessage } from "../../../systemSlice";
 import makeStyles from "@mui/styles/makeStyles";
 import { selFeatures } from "../consoleSlice";
 import { useAppDispatch } from "../../../store";
-import TooltipWrapper from "../Common/TooltipWrapper/TooltipWrapper";
 
 const DeleteServiceAccount = withSuspense(
   React.lazy(() => import("./DeleteServiceAccount"))
@@ -221,7 +221,7 @@ const Account = () => {
             }}
           >
             {" "}
-            <TooltipWrapper tooltip={"Delete Selected"}>
+            <Tooltip tooltip={"Delete Selected"}>
               <Button
                 id={"delete-selected-accounts"}
                 onClick={() => {
@@ -232,7 +232,7 @@ const Account = () => {
                 disabled={selectedSAs.length === 0}
                 variant={"secondary"}
               />
-            </TooltipWrapper>
+            </Tooltip>
             <SecureComponent
               scopes={[IAM_SCOPES.ADMIN_CREATE_USER]}
               resource={CONSOLE_UI_RESOURCE}

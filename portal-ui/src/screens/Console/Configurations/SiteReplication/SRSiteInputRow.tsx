@@ -18,8 +18,7 @@ import React, { Fragment } from "react";
 import { Box } from "@mui/material";
 import InputBoxWrapper from "../../Common/FormComponents/InputBoxWrapper/InputBoxWrapper";
 import Grid from "@mui/material/Grid";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
-import { AddIcon, Button, RemoveIcon } from "mds";
+import { AddIcon, Button, RemoveIcon, Tooltip } from "mds";
 import { SiteInputRow } from "./Types";
 
 const SRSiteInputRow = ({
@@ -131,7 +130,7 @@ const SRSiteInputRow = ({
         >
           {showRowActions ? (
             <React.Fragment>
-              <TooltipWrapper tooltip={"Add a Row"}>
+              <Tooltip tooltip={"Add a Row"}>
                 <Button
                   id={`add-row-${index}`}
                   variant="regular"
@@ -147,8 +146,8 @@ const SRSiteInputRow = ({
                     padding: 0,
                   }}
                 />
-              </TooltipWrapper>
-              <TooltipWrapper tooltip={"Remove Row"}>
+              </Tooltip>
+              <Tooltip tooltip={"Remove Row"}>
                 <Button
                   id={`remove-row-${index}`}
                   variant="regular"
@@ -165,7 +164,7 @@ const SRSiteInputRow = ({
                     marginLeft: 8,
                   }}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </React.Fragment>
           ) : null}
         </Box>

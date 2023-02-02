@@ -17,7 +17,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Theme } from "@mui/material/styles";
-import { AddIcon, BucketsIcon, Button, HelpBox, TrashIcon } from "mds";
+import { AddIcon, BucketsIcon, Button, HelpBox, Tooltip, TrashIcon } from "mds";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Grid from "@mui/material/Grid";
@@ -46,7 +46,6 @@ import { setErrorSnackMessage } from "../../../../systemSlice";
 import { selBucketDetailsLoading } from "./bucketDetailsSlice";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../../store";
-import TooltipWrapper from "../../Common/TooltipWrapper/TooltipWrapper";
 
 const AddReplicationModal = withSuspense(
   React.lazy(() => import("./AddReplicationModal"))
@@ -263,7 +262,7 @@ const BucketReplicationPanel = ({ classes }: IBucketReplicationProps) => {
               matchAll
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Remove Selected Replication Rules"}>
+              <Tooltip tooltip={"Remove Selected Replication Rules"}>
                 <Button
                   id={"remove-bucket-replication-rule"}
                   onClick={() => {
@@ -275,7 +274,7 @@ const BucketReplicationPanel = ({ classes }: IBucketReplicationProps) => {
                   disabled={selectedRepRules.length === 0}
                   variant={"secondary"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
             <SecureComponent
               scopes={[
@@ -286,7 +285,7 @@ const BucketReplicationPanel = ({ classes }: IBucketReplicationProps) => {
               matchAll
               errorProps={{ disabled: true }}
             >
-              <TooltipWrapper tooltip={"Add Replication Rule"}>
+              <Tooltip tooltip={"Add Replication Rule"}>
                 <Button
                   id={"add-bucket-replication-rule"}
                   onClick={() => {
@@ -296,7 +295,7 @@ const BucketReplicationPanel = ({ classes }: IBucketReplicationProps) => {
                   icon={<AddIcon />}
                   variant={"callAction"}
                 />
-              </TooltipWrapper>
+              </Tooltip>
             </SecureComponent>
           </div>
         </Grid>

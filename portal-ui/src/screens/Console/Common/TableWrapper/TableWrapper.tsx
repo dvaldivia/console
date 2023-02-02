@@ -39,8 +39,7 @@ import {
   radioIcons,
   TableRowPredefStyles,
 } from "../FormComponents/common/styleLibrary";
-import { Loader } from "mds";
-import TooltipWrapper from "../TooltipWrapper/TooltipWrapper";
+import { Loader, Tooltip } from "mds";
 
 //Interfaces for table Items
 
@@ -569,7 +568,7 @@ const TableWrapper = ({
 
   return (
     <Grid item xs={12} className={parentClassName}>
-      <TooltipWrapper tooltip={tooltip ? tooltip : ""}>
+      <Tooltip tooltip={tooltip ? tooltip : ""}>
         <Paper
           style={{ overflow: "hidden" }}
           className={`${classes.paper} ${
@@ -814,7 +813,7 @@ const TableWrapper = ({
             </Fragment>
           )}
         </Paper>
-      </TooltipWrapper>
+      </Tooltip>
     </Grid>
   );
 };
