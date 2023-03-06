@@ -26,6 +26,7 @@ setup("authenticate as admin", async ({ page }) => {
   await page.getByPlaceholder("Password").fill("minioadmin");
   await page.getByRole("button", { name: "Login" }).click();
 
+  // we need to give the browser time to store the cookies
   await page.waitForTimeout(1000);
   // End of authentication steps.
 

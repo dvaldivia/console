@@ -33,3 +33,16 @@ test("create a new bucket", async ({ page }) => {
   await page.getByRole("button", { name: "Create Bucket" }).click();
   await expect(page.locator(`#manageBucket-${bucketName}`)).toBeTruthy();
 });
+
+test("invalid bucket name", async ({ page }) => {
+  await page.getByRole("link", { name: "Buckets Buckets" }).click();
+  await page.getByRole("button", { name: "Create Bucket" }).click();
+  await page.getByLabel("Bucket Name*").click();
+  await page.getByLabel("Bucket Name*").fill("invalid name");
+  await page.getByRole("button", { name: "View Bucket Naming Rules" }).click();
+  await expect(
+    page.getByText(
+      "Bucket names can consist only of lowercase letters, numbers, dots (.), and hyphe"
+    )
+  ).toBeTruthy();
+});

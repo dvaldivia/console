@@ -23,21 +23,14 @@ test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:5005/");
 });
 
-test("create a new user", async ({ page }) => {
-  const userName = `new-user-${Math.random() * 100}`;
-
+test("Add a new group", async ({ page }) => {
   await page.getByRole("button", { name: "Identity Identity" }).click();
-  await page.getByRole("link", { name: "Users Users" }).click();
-  await page.getByRole("button", { name: "Create User" }).click();
-  await page.getByLabel("User Name").click();
-  await page.getByLabel("User Name").fill(userName);
-  await page.getByLabel("User Name").press("Tab");
-  await page.getByLabel("Password").fill("newuser123");
-  await page
-    .locator(
-      "div:nth-child(4) > div > .MuiButtonBase-root > .PrivateSwitchBase-input"
-    )
-    .check();
+  await page.getByRole("link", { name: "Groups Groups" }).click();
+  await page.getByRole("button", { name: "Create Group" }).click();
+
+  const groupName = `new-group-${Math.random() * 100}`;
+
+  await page.getByLabel("Group Name").fill(groupName);
   await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByRole("gridcell", { name: userName })).toBeTruthy();
+  await expect(page.getByRole("gridcell", { name: groupName })).toBeTruthy();
 });
