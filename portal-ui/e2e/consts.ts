@@ -13,21 +13,5 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import { test as setup } from "@playwright/test";
-import { minioadminFile } from "./consts";
 
-setup("authenticate as admin", async ({ page }) => {
-  // Perform authentication steps. Replace these actions with your own.
-  await page.goto("http://localhost:5005");
-  await page.getByPlaceholder("Username").click();
-  await page.getByPlaceholder("Username").fill("minioadmin");
-  await page.getByPlaceholder("Password").click();
-  await page.getByPlaceholder("Password").fill("minioadmin");
-  await page.getByRole("button", { name: "Login" }).click();
-
-  // we need to give the browser time to store the cookies
-  await page.waitForTimeout(1000);
-  // End of authentication steps.
-
-  await page.context().storageState({ path: minioadminFile });
-});
+export const minioadminFile = "playwright/.auth/admin.json";

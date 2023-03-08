@@ -15,9 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { expect } from "@playwright/test";
-import { test } from "./fixtures/baseFixture";
+import { generateUUID, test } from "./fixtures/baseFixture";
+import { minioadminFile } from "./consts";
 
-test.use({ storageState: "playwright/.auth/admin.json" });
+test.use({ storageState: minioadminFile });
 
 test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:5005/");
@@ -28,7 +29,7 @@ test("Add a new group", async ({ page }) => {
   await page.getByRole("link", { name: "Groups Groups" }).click();
   await page.getByRole("button", { name: "Create Group" }).click();
 
-  const groupName = `new-group-${Math.random() * 100}`;
+  const groupName = `new-group-${generateUUID()}`;
 
   await page.getByLabel("Group Name").fill(groupName);
   await page.getByRole("button", { name: "Save" }).click();

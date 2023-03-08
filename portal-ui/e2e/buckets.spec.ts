@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { expect } from "@playwright/test";
-import { test } from "./fixtures/baseFixture";
+import { generateUUID, test } from "./fixtures/baseFixture";
+import { minioadminFile } from "./consts";
 
-test.use({ storageState: "playwright/.auth/admin.json" });
+test.use({ storageState: minioadminFile });
 
 test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:5005/");
@@ -27,7 +28,7 @@ test("create a new bucket", async ({ page }) => {
   await page.getByRole("button", { name: "Create Bucket" }).click();
   await page.getByLabel("Bucket Name*").click();
 
-  const bucketName = `new-bucket-${Math.random() * 100}`;
+  const bucketName = `new-bucket-${generateUUID()}`;
 
   await page.getByLabel("Bucket Name*").fill(bucketName);
   await page.getByRole("button", { name: "Create Bucket" }).click();
