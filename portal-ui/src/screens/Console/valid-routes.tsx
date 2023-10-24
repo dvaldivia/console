@@ -23,7 +23,7 @@ import {
   IAM_PAGES_PERMISSIONS,
   IAM_SCOPES,
   S3_ALL_RESOURCES,
-} from "../../common/SecureComponent/permissions";
+} from "common/SecureComponent/permissions";
 import {
   AccessMenuIcon,
   AccountsMenuIcon,
@@ -53,9 +53,9 @@ import {
   UsersMenuIcon,
   WatchIcon,
 } from "mds";
-import { hasPermission } from "../../common/SecureComponent";
-import EncryptionIcon from "../../icons/SidebarMenus/EncryptionIcon";
-import EncryptionStatusIcon from "../../icons/SidebarMenus/EncryptionStatusIcon";
+import { hasPermission } from "common/SecureComponent";
+import EncryptionIcon from "icons/SidebarMenus/EncryptionIcon";
+import EncryptionStatusIcon from "icons/SidebarMenus/EncryptionStatusIcon";
 
 const permissionsValidation = (item: IMenuItem) => {
   return (
